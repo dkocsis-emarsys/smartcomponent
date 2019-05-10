@@ -18,7 +18,8 @@ my-select:before {
 }
 
 my-select:not([content]):before {
-  content: 'Select something';
+  color: #4b6e91;
+  content: 'Select something...';
   display: block;
 }
 
@@ -27,10 +28,12 @@ my-select:not([content]):before {
   border: 1px solid #e6ecf2;
   box-shadow: 0 8px 24px 0 rgba(10, 36, 51, .2);
   display: inline-block;
+  left: 232px;
   max-height: 200px;
   overflow: auto;
   padding: 16px;
   position: absolute;
+  top: 8px;
   width: 200px;
 }
 
@@ -43,6 +46,11 @@ my-option {
   padding: 8px;
 }
 
-.my-option:hover {
+.my-option:not(.my-option--active):hover {
   background: #e6ecf2;
+}
+
+.my-option--active {
+  background: #0c7ae7;
+  color: #fff;
 }

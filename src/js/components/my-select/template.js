@@ -1,7 +1,14 @@
 import { html } from 'lighterhtml';
 
-const optionElement = option => html`
-  <div class="my-option" value=${option.value} onclick=${option.events.click}>${option.content}</div>
-`;
+const optionElement = (state, option) => {
+  const className = [
+    'my-option',
+    ...(state.selectedOption && option.value === state.selectedOption.data.value ? ['my-option--active'] : []),
+  ];
 
-export default state => () => html`${state.items.map(optionElement)}`;
+  return html`
+    <div class=${className.join(' ')} value=${option.value} onclick=${option.events.click}>${option.content}</div>
+  `;
+}
+
+export default state => () => html`${state.items.map(option => optionElement(state, option))}`;
