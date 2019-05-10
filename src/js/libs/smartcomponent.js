@@ -73,6 +73,13 @@ export default class SmartComponent extends HTMLCustomElement {
     return parser.parseFromString(content, 'text/html').body.childNodes[0];
   }
 
+  _dispatchEvent(eventName, detail = {}) {
+    this.dispatchEvent(new CustomEvent(eventName, {
+      detail,
+      bubbles: true
+    }));
+  }
+
   __notifyParent(value) {
     if (value) {
       this.__notifyParentSubscription = this._state.subscribe('', () => {

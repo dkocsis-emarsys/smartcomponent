@@ -12,7 +12,16 @@
     <my-option value="item3">Option 3</my-option>
   </my-select>
 
+  <hr>
+
+  <div>Value of the select is: <span id="result"></span></div>
+
   <script src="https://polyfill.io/v3/polyfill.min.js?features=Array.prototype.find"></script>
   <script src="./bundle.js"></script>
+  <script>
+    document.querySelector('my-select').addEventListener('change', function(event) {
+      document.querySelector('#result').textContent = event.detail.data.content;
+    });
+  </script>
 </body>
 </html>
