@@ -1,0 +1,48 @@
+html {
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+
+my-select {
+  align-items: center;
+  background: #e6ecf2;
+  cursor: pointer;
+  display: inline-flex;
+  height: 40px;
+  padding: 8px;
+  width: 200px;
+}
+
+my-select:before {
+  content: attr(content);
+  display: block;
+}
+
+my-select:not([content]):before {
+  content: 'Select something';
+  display: block;
+}
+
+.my-select__list {
+  background: #fff;
+  border: 1px solid #e6ecf2;
+  box-shadow: 0 8px 24px 0 rgba(10, 36, 51, .2);
+  display: inline-block;
+  max-height: 200px;
+  overflow: auto;
+  padding: 16px;
+  position: absolute;
+  width: 200px;
+}
+
+my-option {
+  display: none;
+}
+
+.my-option {
+  cursor: pointer;
+  padding: 8px;
+}
+
+.my-option:hover {
+  background: #e6ecf2;
+}
