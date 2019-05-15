@@ -4,15 +4,16 @@ import template from './template';
 
 export default class MySelect extends SmartComponent {
   init() {
-    super.init();
+    this._container = this._parseHTML(`<div class="my-select__list"></div>`);
 
-    const container = this._parseHTML(`<div class="my-select__list"></div>`);
+    super.init({
+      renderContainer: this._container,
+      appendRenderContainer: false,
+      listenChildren: true
+    });
 
-    this._state.setOption('renderContainer', container);
-    this._state.setOption('appendRenderContainer', false);
-    this._state.setOption('listenChildren', true);
+    this._state.set('opened', false);
 
-    this._state.subscribeOption('connectedChildren', this._childrenChangedCallback.bind(this));
     this._state.subscribe('opened', this._appendContainer.bind(this));
     this._state.subscribe('selectedOption', this._dispatchChangeEvent.bind(this));
 
@@ -23,31 +24,53 @@ export default class MySelect extends SmartComponent {
     this._state.set('opened', false);
   }
 
-  _appendContainer(value) {
-    const renderContainer = this._state.getOption('renderContainer');
+  childrenChangedCallback(collection) {
+    const childrenList = collection.get();
+    const items = childrenList.map(child => {
+      if (child.data.selected) {
+        this._state.set('selectedOption', child);
+      }
 
+      return {
+        content: child.data.content,
+        value: child.data.value,
+        events: {
+          click: () => this._onClick(child)
+        }
+      };
+    });
+
+    this._state.set('items', items);
+  }
+
+  renderCallback() {
+    const state = this._state.get();
+
+    if (!state) { return; }
+
+    if (state.selectedOption) {
+      this.setAttribute('content', state.selectedOption.data.content);
+    } else {
+      this.removeAttribute('content');
+    }
+
+    this.classList.toggle('my-select--opened', state.opened);
+
+    if (state.opened) {
+      render(this._container, template(state));
+    }
+  }
+
+  _appendContainer(value) {
     if (value) {
-      document.body.appendChild(renderContainer);
-    } else if (renderContainer.parentNode) {
-      renderContainer.parentNode.removeChild(renderContainer);
+      document.body.appendChild(this._container);
+    } else if (this._container.parentNode) {
+      this._container.parentNode.removeChild(this._container);
     }
   }
 
   _toggle() {
     this._state.get('opened') ? this._state.set('opened', false) : this._state.set('opened', true);
-  }
-
-  _childrenChangedCallback(collection) {
-    const childrenList = collection.get();
-    const items = childrenList.map(child => ({
-      content: child.data.content,
-      value: child.data.value,
-      events: {
-        click: () => this._onClick(child)
-      }
-    }));
-
-    this._state.set('items', items);
   }
 
   _onClick(child) {
@@ -59,19 +82,5 @@ export default class MySelect extends SmartComponent {
 
   _dispatchChangeEvent(value) {
     this._dispatchEvent('change', value);
-  }
-
-  _renderCallback() {
-    const selectedOption = this._state.get('selectedOption');
-    if (selectedOption) {
-      this.setAttribute('content', selectedOption.data.content);
-    }
-
-    const renderContainer = this._state.getOption('renderContainer');
-    const state = this._state.get();
-
-    if (!state || !state.opened) { return; }
-
-    render(renderContainer, template(state));
   }
 }

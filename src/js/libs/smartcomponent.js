@@ -10,7 +10,7 @@ class HTMLCustomElement extends HTMLElement {
 }
 
 export default class SmartComponent extends HTMLCustomElement {
-  init() {
+  init(options = {}) {
     this._state = new State({
       options: {
         id: Symbol(),
@@ -22,7 +22,7 @@ export default class SmartComponent extends HTMLCustomElement {
         appendRenderContainer: true,
         connectedChildren: new Collection()
       }
-    }, this._renderCallback.bind(this));
+    }, this.renderCallback.bind(this));
 
     this.__childConnectedCallback = this.__childConnectedCallback.bind(this);
     this.__childDisconnectedCallback = this.__childDisconnectedCallback.bind(this);
@@ -31,8 +31,13 @@ export default class SmartComponent extends HTMLCustomElement {
     this._state.subscribeOption('listenChildren', this.__listenChildren.bind(this));
     this._state.subscribeOption('watchContent', this.__watchContent.bind(this));
 
-    this.__mutationObserver = new MutationObserver(this._mutationObserverCallback.bind(this));
+    this.__mutationObserver = new MutationObserver(this.contentChangedCallback.bind(this));
     this.__notifyParentSubscription = null;
+    this.__listenChildrenSubscription = null;
+
+    Object.keys(options).forEach(option => {
+      this._state.setOption(option, options[option]);
+    });
   }
 
   connectedCallback() {
@@ -42,7 +47,7 @@ export default class SmartComponent extends HTMLCustomElement {
     if (renderContainer) {
       if (appendRenderContainer) { this.appendChild(renderContainer); }
 
-      this._renderCallback();
+      this.renderCallback();
     }
 
     this.__notifyParentEvent('_child.connected');
@@ -61,8 +66,9 @@ export default class SmartComponent extends HTMLCustomElement {
     this[transformedName] = newValue;
   }
 
-  _renderCallback() {}
-  _mutationObserverCallback() {}
+  renderCallback() {}
+  contentChangedCallback() {}
+  childrenChangedCallback() {}
 
   _convertAttributeToBoolean(value) {
     return value !== undefined && value !== null && value !== false && value !== 'false';
@@ -106,9 +112,11 @@ export default class SmartComponent extends HTMLCustomElement {
     if (this._state.getOption('listenChildren')) {
       this.addEventListener('_child.connected', this.__childConnectedCallback);
       this.addEventListener('_child.changed', this.__childChangedCallback);
+      this.__listenChildrenSubscription = this._state.subscribeOption('connectedChildren', this.childrenChangedCallback.bind(this));
     } else {
       this.removeEventListener('_child.connected', this.__childConnectedCallback);
       this.removeEventListener('_child.changed', this.__childChangedCallback);
+      this.__listenChildrenSubscription.unsubscribe();
     }
   }
 

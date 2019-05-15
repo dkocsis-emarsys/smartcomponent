@@ -5,11 +5,16 @@ html {
 my-select {
   align-items: center;
   background: #e6ecf2;
+  border: 1px solid transparent;
   cursor: pointer;
   display: inline-flex;
   height: 40px;
   padding: 8px;
   width: 200px;
+}
+
+.my-select--opened {
+  border: 1px solid rgb(10, 36, 51);
 }
 
 my-select:before {
@@ -20,7 +25,6 @@ my-select:before {
 my-select:not([content]):before {
   color: #4b6e91;
   content: 'Select something...';
-  display: block;
 }
 
 .my-select__list {
