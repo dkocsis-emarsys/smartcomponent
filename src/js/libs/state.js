@@ -107,8 +107,8 @@ export default class State {
   }
 
   _setMultiple(type, list, options = {}) {
-    list.forEach(element => {
-      this._set(`${type}.${element.name}`, element.value, { triggerRender: false });
+    Object.keys(list).forEach(element => {
+      this._set(`${type}.${element}`, list[element], { triggerRender: false });
     });
 
     if (options.triggerRender === undefined || options.triggerRender) { this._renderFunction(); }

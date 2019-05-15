@@ -74,10 +74,10 @@ export default class MySelect extends SmartComponent {
   }
 
   _onClick(child) {
-    this._state.setMultiple([
-      { name: 'opened', value: false },
-      { name: 'selectedOption', value: child }
-    ]);
+    this._state.setMultiple({
+      opened: false,
+      selectedOption: child
+    });
   }
 
   _dispatchChangeEvent(value) {
