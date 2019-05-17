@@ -16,6 +16,8 @@ export default class State {
   set(name, value, options = {}) {
     const modifiedData = name.split('.').reduceRight((previous, current) => ({ [current]: previous }), value);
 
+    if (this._data[name] === modifiedData[name]) { return value; }
+
     this._data = deepMerge(this._data, modifiedData);
 
     if (options.triggerCallback === undefined || options.triggerCallback) { this._triggerCallback(name); }
