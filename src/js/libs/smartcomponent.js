@@ -1,4 +1,3 @@
-import Symbol from 'es6-symbol';
 import CustomEvent from 'custom-event';
 import { html } from 'lighterhtml';
 import State from './state';
