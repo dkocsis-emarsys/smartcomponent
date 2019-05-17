@@ -11,4 +11,4 @@ const optionElement = (state, option) => {
   `;
 }
 
-export default state => () => html`${state.items.map(option => optionElement(state, option))}`;
+export default state => () => html`${state.items ? state.items.map(option => optionElement(state, option)) : ''}`;

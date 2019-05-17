@@ -21,6 +21,8 @@ export default class MySelect extends SmartComponent {
   }
 
   disconnectedCallback() {
+    super.disconnectedCallback();
+
     this._state.set('opened', false);
   }
 
@@ -59,6 +61,11 @@ export default class MySelect extends SmartComponent {
     if (state.opened) {
       render(this._container, template(state));
     }
+  }
+
+  get selected() {
+    const selectedOption = this._state.get('selectedOption');
+    return selectedOption ? selectedOption.data.value : false;
   }
 
   _appendContainer(value) {
