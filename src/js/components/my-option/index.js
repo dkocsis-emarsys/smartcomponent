@@ -23,6 +23,8 @@ export default class MyOption extends SmartComponent {
   }
 
   connectedCallback() {
+    super.connectedCallback();
+
     this._state.set('content', this.textContent);
   }
 
