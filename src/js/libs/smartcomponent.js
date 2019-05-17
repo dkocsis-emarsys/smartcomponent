@@ -7,38 +7,38 @@ import Collection from './collection';
 export default class SmartComponent extends HTMLElement {
   constructor(...$) { const _ = super(...$); _.init(); return _; }
   init(options = {}) {
-    this._state = new State({
-      options: {
-        id: Symbol(),
-        listenChildren: false,
-        notifyParent: false,
-        notifyParentOnStateChange: false,
-        watchContent: false,
-        renderContainer: null,
-        appendRenderContainer: true,
-        connectedChildren: new Collection()
-      }
+    this._options = new State({
+      id: Symbol(),
+      listenChildren: false,
+      notifyParent: false,
+      notifyParentOnStateChange: false,
+      watchContent: false,
+      renderContainer: null,
+      appendRenderContainer: true,
+      connectedChildren: new Collection()
     }, this.renderCallback.bind(this));
+
+    this._state = new State({}, this.renderCallback.bind(this));
 
     this.__childConnectedCallback = this.__childConnectedCallback.bind(this);
     this.__childDisconnectedCallback = this.__childDisconnectedCallback.bind(this);
 
-    this._state.subscribeOption('notifyParent', this.__notifyParent.bind(this));
-    this._state.subscribeOption('listenChildren', this.__listenChildren.bind(this));
-    this._state.subscribeOption('watchContent', this.__watchContent.bind(this));
+    this._options.subscribe('notifyParent', this.__notifyParent.bind(this));
+    this._options.subscribe('listenChildren', this.__listenChildren.bind(this));
+    this._options.subscribe('watchContent', this.__watchContent.bind(this));
 
     this.__mutationObserver = new MutationObserver(this.contentChangedCallback.bind(this));
     this.__notifyParentSubscription = null;
     this.__listenChildrenSubscription = null;
 
     Object.keys(options).forEach(option => {
-      this._state.setOption(option, options[option]);
+      this._options.set(option, options[option]);
     });
   }
 
   connectedCallback() {
-    const renderContainer = this._state.getOption('renderContainer');
-    const appendRenderContainer = this._state.getOption('appendRenderContainer');
+    const renderContainer = this._options.get('renderContainer');
+    const appendRenderContainer = this._options.get('appendRenderContainer');
 
     if (renderContainer) {
       if (appendRenderContainer) { this.appendChild(renderContainer); }
@@ -50,7 +50,7 @@ export default class SmartComponent extends HTMLElement {
   }
 
   disconnectedCallback() {
-    const renderContainer = this._state.getOption('renderContainer');
+    const renderContainer = this._options.get('renderContainer');
 
     if (renderContainer) { renderContainer.parentNode.removeChild(renderContainer); }
 
@@ -93,11 +93,11 @@ export default class SmartComponent extends HTMLElement {
   }
 
   __notifyParentEvent(eventName) {
-    if (!this._state.getOption('notifyParent')) { return; }
+    if (!this._options.get('notifyParent')) { return; }
 
     this.dispatchEvent(new CustomEvent(eventName, {
       detail: {
-        id: this._state.getOption('id'),
+        id: this._options.get('id'),
         data: this._state.get()
       },
       bubbles: true
@@ -105,10 +105,10 @@ export default class SmartComponent extends HTMLElement {
   }
 
   __listenChildren() {
-    if (this._state.getOption('listenChildren')) {
+    if (this._options.get('listenChildren')) {
       this.addEventListener('_child.connected', this.__childConnectedCallback);
       this.addEventListener('_child.changed', this.__childChangedCallback);
-      this.__listenChildrenSubscription = this._state.subscribeOption('connectedChildren', this.childrenChangedCallback.bind(this));
+      this.__listenChildrenSubscription = this._options.subscribe('connectedChildren', this.childrenChangedCallback.bind(this));
     } else {
       this.removeEventListener('_child.connected', this.__childConnectedCallback);
       this.removeEventListener('_child.changed', this.__childChangedCallback);
@@ -119,25 +119,25 @@ export default class SmartComponent extends HTMLElement {
   __childConnectedCallback(event) {
     event.target.addEventListener('_child.disconnected', this.__childDisconnectedCallback);
 
-    const childrenCollection = this._state.getOption('connectedChildren');
+    const childrenCollection = this._options.get('connectedChildren');
     childrenCollection.upsert({ id: event.detail.id, element: event.target, data: event.detail.data });
-    this._state.triggerOptionChange('connectedChildren');
+    this._options.triggerChange('connectedChildren');
   }
 
   __childChangedCallback(event) {
-    const childrenCollection = this._state.getOption('connectedChildren');
+    const childrenCollection = this._options.get('connectedChildren');
     childrenCollection.upsert({ id: event.detail.id, element: event.target, data: event.detail.data });
-    this._state.triggerOptionChange('connectedChildren');
+    this._options.triggerChange('connectedChildren');
   }
 
   __childDisconnectedCallback(event) {
-    const childrenCollection = this._state.getOption('connectedChildren');
+    const childrenCollection = this._options.get('connectedChildren');
     childrenCollection.remove(event.detail.id);
-    this._state.triggerOptionChange('connectedChildren');
+    this._options.triggerChange('connectedChildren');
   }
 
   __watchContent() {
-    if (this._state.getOption('watchContent')) {
+    if (this._options.get('watchContent')) {
       this.__mutationObserver.observe(this, {
         attributes: true,
         childList: true,
