@@ -4,12 +4,8 @@ import { html } from 'lighterhtml';
 import State from './state';
 import Collection from './collection';
 
-class HTMLCustomElement extends HTMLElement {
+export default class SmartComponent extends HTMLElement {
   constructor(...$) { const _ = super(...$); _.init(); return _; }
-  init() {}
-}
-
-export default class SmartComponent extends HTMLCustomElement {
   init(options = {}) {
     this._state = new State({
       options: {
