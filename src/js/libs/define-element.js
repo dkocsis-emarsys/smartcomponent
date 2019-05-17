@@ -1,6 +1,6 @@
 const defineElement = (componentClass, dependencies = []) => {
-  const classNameMatch = componentClass.toString().match(/^function\s*(?<function>[^\s(]+)|^class\s*(?<class>[^\s(]+)/);
-  const className = classNameMatch.groups.class || classNameMatch.groups.function;
+  const classNameMatch = componentClass.toString().match(/^function\s*([^\s(]+)|^class\s*([^\s(]+)/);
+  const className = classNameMatch[1] || classNameMatch[2];
   const tag = className.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase();
 
   customElements.define(tag, componentClass);
