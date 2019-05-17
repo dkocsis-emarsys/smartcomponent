@@ -1,5 +1,6 @@
 import CustomEvent from 'custom-event';
 import { html } from 'lighterhtml';
+import debounce from './debounce';
 import State from './state';
 import Collection from './collection';
 
@@ -22,11 +23,15 @@ export default class SmartComponent extends HTMLElement {
     this.__childConnectedCallback = this.__childConnectedCallback.bind(this);
     this.__childDisconnectedCallback = this.__childDisconnectedCallback.bind(this);
 
+    this.contentChangedCallback = debounce(this.contentChangedCallback.bind(this));
+    this.childrenChangedCallback = debounce(this.childrenChangedCallback.bind(this));
+    this.__notifyParentEvent = debounce(this.__notifyParentEvent.bind(this));
+
     this._options.subscribe('notifyParent', this.__notifyParent.bind(this));
     this._options.subscribe('listenChildren', this.__listenChildren.bind(this));
     this._options.subscribe('watchContent', this.__watchContent.bind(this));
 
-    this.__mutationObserver = new MutationObserver(this.contentChangedCallback.bind(this));
+    this.__mutationObserver = new MutationObserver(this.contentChangedCallback);
     this.__notifyParentSubscription = null;
     this.__listenChildrenSubscription = null;
 
@@ -107,7 +112,7 @@ export default class SmartComponent extends HTMLElement {
     if (this._options.get('listenChildren')) {
       this.addEventListener('_child.connected', this.__childConnectedCallback, true);
       this.addEventListener('_child.changed', this.__childChangedCallback, true);
-      this.__listenChildrenSubscription = this._options.subscribe('connectedChildren', this.childrenChangedCallback.bind(this));
+      this.__listenChildrenSubscription = this._options.subscribe('connectedChildren', this.childrenChangedCallback);
     } else {
       this.removeEventListener('_child.connected', this.__childConnectedCallback);
       this.removeEventListener('_child.changed', this.__childChangedCallback);
