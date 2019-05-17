@@ -60,6 +60,8 @@ export default class MySelect extends SmartComponent {
 
     if (state.opened) {
       render(this._container, template(state));
+
+      this._scrollToSelectedElement();
     }
   }
 
@@ -89,5 +91,12 @@ export default class MySelect extends SmartComponent {
 
   _dispatchChangeEvent(value) {
     this._dispatchEvent('change', value);
+  }
+
+  _scrollToSelectedElement() {
+    if (this._state.get('selectedOption')) {
+      const selectedElement = this._container.querySelector('.my-option--active');
+      this._container.scrollTop = selectedElement.offsetTop - 16;
+    }
   }
 }
