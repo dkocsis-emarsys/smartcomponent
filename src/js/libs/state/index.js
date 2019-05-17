@@ -1,4 +1,4 @@
-import deepMerge from './deep-merge';
+import deepMerge from '../deep-merge';
 
 export default class State {
   constructor(defaultData = {}, renderFunction = () => {}) {
@@ -8,29 +8,33 @@ export default class State {
     this._subscriptions = [];
   }
 
+  _get(name, data) {
+    return name ? name.split('.').reduce((item, index) => item ? item[index] : false, data) : data;
+  }
+
   get(name) {
-    return name ? name.split('.').reduce((item, index) => item ? item[index] : false, this._data) : this._data;
+    return this._get(name, this._data);
   }
 
   set(name, value, options = {}) {
     const modifiedData = name.split('.').reduceRight((previous, current) => ({ [current]: previous }), value);
 
-    if (this._data[name] === modifiedData[name]) { return value; }
+    if (this._get(name, this._data) === this._get(name, modifiedData)) { return value; }
 
     this._data = deepMerge(this._data, modifiedData);
 
     if (options.triggerCallback === undefined || options.triggerCallback) { this._triggerCallback(name); }
     if (options.triggerRender === undefined || options.triggerRender) { this._renderFunction(); }
 
-    return value;
+    return { name, value };
   }
 
   setMultiple(list, options = {}) {
-    Object.keys(list).forEach(name => {
-      this.set(name, list[name], { triggerRender: false });
-    });
+    const result = Object.keys(list).map(name => this.set(name, list[name], { triggerRender: false }));
 
     if (options.triggerRender === undefined || options.triggerRender) { this._renderFunction(); }
+
+    return result;
   }
 
   render() {
@@ -69,8 +73,8 @@ export default class State {
     if (!this._subscriptions) { return; }
 
     this._subscriptions.forEach(subscription => {
-      if (subscription.name === '' || this._hasSubArray(name.split('.'), subscription.name.split('.'))) {
-        subscription.callback(this.get(name), name);
+      if (!name || !subscription.name || this._hasSubArray(name.split('.'), subscription.name.split('.'))) {
+        subscription.callback(this._get(name, this._data), name);
       }
     });
   }
