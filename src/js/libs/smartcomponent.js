@@ -106,8 +106,8 @@ export default class SmartComponent extends HTMLElement {
 
   __listenChildren() {
     if (this._options.get('listenChildren')) {
-      this.addEventListener('_child.connected', this.__childConnectedCallback);
-      this.addEventListener('_child.changed', this.__childChangedCallback);
+      this.addEventListener('_child.connected', this.__childConnectedCallback, true);
+      this.addEventListener('_child.changed', this.__childChangedCallback, true);
       this.__listenChildrenSubscription = this._options.subscribe('connectedChildren', this.childrenChangedCallback.bind(this));
     } else {
       this.removeEventListener('_child.connected', this.__childConnectedCallback);
@@ -117,7 +117,8 @@ export default class SmartComponent extends HTMLElement {
   }
 
   __childConnectedCallback(event) {
-    event.target.addEventListener('_child.disconnected', this.__childDisconnectedCallback);
+    event.stopPropagation();
+    event.target.addEventListener('_child.disconnected', this.__childDisconnectedCallback, true);
 
     const childrenCollection = this._options.get('connectedChildren');
     childrenCollection.upsert({ id: event.detail.id, element: event.target, data: event.detail.data });
@@ -125,12 +126,14 @@ export default class SmartComponent extends HTMLElement {
   }
 
   __childChangedCallback(event) {
+    event.stopPropagation();
     const childrenCollection = this._options.get('connectedChildren');
     childrenCollection.upsert({ id: event.detail.id, element: event.target, data: event.detail.data });
     this._options.triggerChange('connectedChildren');
   }
 
   __childDisconnectedCallback(event) {
+    event.stopPropagation();
     const childrenCollection = this._options.get('connectedChildren');
     childrenCollection.remove(event.detail.id);
     this._options.triggerChange('connectedChildren');

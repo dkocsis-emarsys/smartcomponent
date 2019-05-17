@@ -17,7 +17,7 @@ export default class MySelect extends SmartComponent {
     this._state.subscribe('opened', this._appendContainer.bind(this));
     this._state.subscribe('selectedOption', this._dispatchChangeEvent.bind(this));
 
-    this.addEventListener('click', this._toggle.bind(this));
+    this.addEventListener('click', this._toggle.bind(this), true);
   }
 
   disconnectedCallback() {
