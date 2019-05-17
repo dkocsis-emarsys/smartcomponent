@@ -3,7 +3,7 @@ import { html } from 'lighterhtml';
 const optionElement = (state, option) => {
   const className = [
     'my-option',
-    ...(state.selectedOption && option.value === state.selectedOption.data.value ? ['my-option--active'] : []),
+    ...(state.selectedOption && option.value === state.selectedOption.value ? ['my-option--active'] : []),
   ];
 
   return html`

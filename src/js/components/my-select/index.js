@@ -30,7 +30,7 @@ export default class MySelect extends SmartComponent {
     const childrenList = collection.get();
     const items = childrenList.map(child => {
       if (child.data.selected) {
-        this._state.set('selectedOption', child);
+        this._setSelectedOption(child.data.value, child.data.content);
       }
 
       return {
@@ -51,7 +51,7 @@ export default class MySelect extends SmartComponent {
     if (!state) { return; }
 
     if (state.selectedOption) {
-      this.setAttribute('content', state.selectedOption.data.content);
+      this.setAttribute('content', state.selectedOption.content);
     } else {
       this.removeAttribute('content');
     }
@@ -67,7 +67,16 @@ export default class MySelect extends SmartComponent {
 
   get selected() {
     const selectedOption = this._state.get('selectedOption');
-    return selectedOption ? selectedOption.data.value : false;
+    return selectedOption ? selectedOption.value : false;
+  }
+
+  set value(value) {
+    const items = this._state.get('items');
+    const selectedOption = items.find(item => item.value === value);
+
+    if (!selectedOption) { return; }
+
+    this._setSelectedOption(selectedOption.value, selectedOption.content);
   }
 
   _appendContainer(value) {
@@ -85,7 +94,7 @@ export default class MySelect extends SmartComponent {
   _onClick(child) {
     this._state.setMultiple({
       opened: false,
-      selectedOption: child
+      selectedOption: { value: child.data.value, content: child.data.content }
     });
   }
 
@@ -98,5 +107,9 @@ export default class MySelect extends SmartComponent {
       const selectedElement = this._container.querySelector('.my-option--active');
       this._container.scrollTop = selectedElement.offsetTop - 16;
     }
+  }
+
+  _setSelectedOption(value, content) {
+    this._state.set('selectedOption', { value, content });
   }
 }
