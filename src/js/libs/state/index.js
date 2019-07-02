@@ -23,7 +23,7 @@ export default class State {
 
     this._data = deepMerge(this._data, modifiedData);
 
-    if (options.triggerCallback === undefined || options.triggerCallback) { this._triggerCallback(name); }
+    if (options.triggerCallback === undefined || options.triggerCallback) { this._triggerCallback(name, modifiedData); }
     if (options.triggerRender === undefined || options.triggerRender) { this._renderFunction(); }
 
     return { name, value };
@@ -69,12 +69,15 @@ export default class State {
     return sub.every((i => v => i = master.indexOf(v, i) + 1)(0));
   };
 
-  _triggerCallback(name) {
+  _triggerCallback(name, modifiedData) {
     if (!this._subscriptions) { return; }
 
+    const modifiedKeys = typeof modifiedData === 'object' && modifiedData.constructor === Object ?
+      this._objectToDotNotation(modifiedData) : [];
+
     this._subscriptions.forEach(subscription => {
-      if (!name || !subscription.name || this._hasSubArray(name.split('.'), subscription.name.split('.'))) {
-        subscription.callback(this._get(name, this._data), name);
+      if (!name || !subscription.name || this._hasSubArray(name.split('.'), subscription.name.split('.')) || modifiedKeys.indexOf(subscription.name) !== -1) {
+        subscription.callback(this._get(subscription.name, this._data), subscription.name);
       }
     });
   }
@@ -85,5 +88,19 @@ export default class State {
         delete store._subscriptions[index];
       }
     });
+  }
+
+  _objectToDotNotation(data, prefix = '', keys = []) {
+    return Object.entries(data).reduce((list, [key, value]) => {
+      const flattenedKey = `${prefix}${key}`;
+
+      if (typeof value === 'object' && value.constructor === Object) {
+        this._objectToDotNotation(value, `${flattenedKey}.`, list);
+      } else {
+        keys.push(flattenedKey);
+      }
+
+      return list;
+    }, keys);
   }
 }

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --hot --mode development",
+    "start": "webpack-dev-server --hot --mode development --port 27960",
     "build": "webpack --mode production",
     "test:unit": "mocha --require @babel/register ./src/js/setup.unit.spec.js \"./src/js/**/*.unit.spec.js\"",
     "test:unit:watch": "mocha -w --require @babel/register ./src/js/setup.unit.spec.js \"./src/js/**/*.unit.spec.js\""

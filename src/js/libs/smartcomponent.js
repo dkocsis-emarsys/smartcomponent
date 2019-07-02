@@ -38,7 +38,7 @@ export default class SmartComponent extends HTMLElement {
     this._options.subscribe('notifyParent', this.__notifyParent.bind(this));
     this._options.subscribe('listenChildren', this.__listenChildren.bind(this));
     this._options.subscribe('watchContent', this.__watchContent.bind(this));
-    this._options.subscribe('render', this.__renderGlobalState.bind(this));
+    this._options.subscribe('render.globalState', this.__renderGlobalState.bind(this));
 
     this.__mutationObserver = new MutationObserver(this.contentChangedCallback);
     this.__notifyParentSubscription = null;

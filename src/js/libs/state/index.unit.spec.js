@@ -217,6 +217,17 @@ describe('State', () => {
       state.set('a.b', 2);
 
       expect(subscribeSpy).to.have.been.calledTwice;
+      expect(subscribeSpy).to.have.been.calledWith({}, 'a');
+    });
+
+   it('calls callback function with deep value for any changes', () => {
+      const subscribeSpy = sinon.spy();
+      const state = new State({});
+
+      state.subscribe('a.b', subscribeSpy);
+      state.set('a', { b: 2 });
+
+      expect(subscribeSpy).to.have.been.calledOnce;
       expect(subscribeSpy).to.have.been.calledWith(2, 'a.b');
     });
 
@@ -237,11 +248,11 @@ describe('State', () => {
       const state = new State({});
 
       state.set('a', 1);
-      const subscription = state.subscribe(null, subscribeSpy);
+      const subscription = state.subscribe('', subscribeSpy);
       state.triggerChange('a');
 
       expect(subscribeSpy).to.have.been.calledOnce;
-      expect(subscribeSpy).to.have.been.calledWith(1, 'a');
+      expect(subscribeSpy).to.have.been.calledWith({ a: 1 }, '');
     });
   });
 
