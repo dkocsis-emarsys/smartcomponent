@@ -1,4 +1,3 @@
-import { render } from 'lighterhtml';
 import SmartComponent from '../../libs/smartcomponent';
 import template from './template';
 
@@ -7,8 +6,11 @@ export default class MySelect extends SmartComponent {
     this._container = this._parseHTML(`<div class="my-select__list"></div>`);
 
     super.init({
-      renderContainer: this._container,
-      appendRenderContainer: false,
+      render: {
+        container: this._container,
+        template: template,
+        autoAppendContainer: false
+      },
       listenChildren: true
     });
 
@@ -29,13 +31,13 @@ export default class MySelect extends SmartComponent {
   childrenChangedCallback(collection) {
     const childrenList = collection.get();
     const items = childrenList.map(child => {
-      if (child.data.selected) {
-        this._setSelectedOption(child.data.value, child.data.content);
+      if (child.state.selected) {
+        this._setSelectedOption(child.state.value, child.state.content);
       }
 
       return {
-        content: child.data.content,
-        value: child.data.value,
+        content: child.state.content,
+        value: child.state.value,
         events: {
           click: () => this._onClick(child)
         }
@@ -59,7 +61,7 @@ export default class MySelect extends SmartComponent {
     this.classList.toggle('my-select--opened', state.opened);
 
     if (state.opened) {
-      render(this._container, template(state));
+      super.renderCallback(state);
 
       this._scrollToSelectedElement();
     }
@@ -94,7 +96,7 @@ export default class MySelect extends SmartComponent {
   _onClick(child) {
     this._state.setMultiple({
       opened: false,
-      selectedOption: { value: child.data.value, content: child.data.content }
+      selectedOption: { value: child.state.value, content: child.state.content }
     });
   }
 
@@ -104,7 +106,7 @@ export default class MySelect extends SmartComponent {
 
   _scrollToSelectedElement() {
     if (this._state.get('selectedOption')) {
-      const selectedElement = this._container.querySelector('.my-option--active');
+      const selectedElement = this._container.querySelector('.my-select-option--active');
       this._container.scrollTop = selectedElement.offsetTop - 16;
     }
   }

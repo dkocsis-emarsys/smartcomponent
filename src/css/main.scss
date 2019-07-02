@@ -1,0 +1,112 @@
+html {
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+body {
+  font-family: sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  margin: auto;
+}
+
+h1 {
+  font-size: 64px;
+  line-height: 72px;
+  margin-top: 24px;
+  margin-bottom: 48px;
+  text-align: center;
+}
+
+h2 {
+  font-size: 40px;
+  line-height: 48px;
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+h3 {
+  font-size: 25px;
+  line-height: 48px;
+  margin-top: 24px;
+  margin-bottom: 0px;
+}
+
+h4 {
+  font-size: 16px;
+  line-height: 24px;
+  margin-top: 24px;
+  margin-bottom: 0px;
+}
+
+h5 {
+  font-size: 16px;
+  line-height: 24px;
+  margin-top: 24px;
+  margin-bottom: 0px;
+}
+
+p, ul, ol, pre, table, blockquote {
+  margin-top: 0px;
+  margin-bottom: 24px;
+}
+
+ul ul, ol ol, ul ol, ol ul {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+hr {
+  border: 1px solid;
+  margin: -1px 0;
+}
+
+a, b, i, strong, em, small, code {
+  line-height: 0;
+}
+
+sub, sup {
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+sup {
+  top: -0.5em;
+}
+
+sub {
+  bottom: -0.25em;
+}
+
+.s-header {
+  align-items: center;
+  display: flex;
+  height: 128px;
+  justify-content: center;
+  margin-bottom: 64px;
+
+  svg {
+    height: 64px;
+  }
+}
+
+.s-content {
+  margin: auto;
+  max-width: 800px;
+  padding: 0 16px;
+}
+
+.s-api {
+  &__col {
+    padding: 16px;
+    vertical-align: top;
+
+    &--name {
+      text-align: right;
+    }
+  }
+}
+
+@import 'components';

@@ -1,0 +1,62 @@
+html {
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+
+my-select {
+  align-items: center;
+  background: #e6ecf2;
+  border: 1px solid transparent;
+  cursor: pointer;
+  display: inline-flex;
+  height: 40px;
+  padding: 8px;
+  width: 200px;
+
+  &:before {
+    content: attr(content);
+    display: block;
+  }
+
+  &:not([content]):before {
+    color: #4b6e91;
+    content: 'Select something...';
+  }
+}
+
+.my-select {
+  &--opened {
+    border: 1px solid rgb(10, 36, 51);
+  }
+
+  &__list {
+    background: #fff;
+    border: 1px solid #e6ecf2;
+    box-shadow: 0 8px 24px 0 rgba(10, 36, 51, .2);
+    display: inline-block;
+    left: 232px;
+    max-height: 200px;
+    overflow: auto;
+    padding: 16px;
+    position: absolute;
+    top: 8px;
+    width: 200px;
+  }
+}
+
+my-select-option {
+  display: none;
+}
+
+.my-select-option {
+  cursor: pointer;
+  padding: 8px;
+
+  &:not(.my-select-option--active):hover {
+    background: #e6ecf2;
+  }
+
+  &--active {
+    background: #0c7ae7;
+    color: #fff;
+  }
+}

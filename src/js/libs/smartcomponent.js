@@ -1,51 +1,74 @@
 import CustomEvent from 'custom-event';
-import { html } from 'lighterhtml';
+import { render } from 'lighterhtml';
 import debounce from './debounce';
 import State from './state';
+import globalState from './global-state';
 import Collection from './collection';
 
 export default class SmartComponent extends HTMLElement {
   constructor(...$) { const _ = super(...$); _.init(); return _; }
   init(options = {}) {
+    this.__connected = false;
+
+    this.__childConnectedCallback = this.__childConnectedCallback.bind(this);
+    this.__childDisconnectedCallback = this.__childDisconnectedCallback.bind(this);
+    this.__notifyParentEvent = this.__notifyParentEvent.bind(this);
+
+    this.contentChangedCallback = this.contentChangedCallback.bind(this);
+    this.childrenChangedCallback = debounce(this.childrenChangedCallback.bind(this));
+    this.renderCallback = this.renderCallback.bind(this);
+
     this._options = new State({
       id: Symbol(),
       listenChildren: false,
       notifyParent: false,
-      notifyParentOnStateChange: false,
       watchContent: false,
-      renderContainer: null,
-      appendRenderContainer: true,
-      connectedChildren: new Collection()
-    }, this.renderCallback.bind(this));
+      connectedChildren: new Collection(),
+      render: {
+        container: null,
+        template: null,
+        globalState: false,
+        autoAppendContainer: true
+      }
+    }, this.renderCallback);
 
-    this._state = new State({}, this.renderCallback.bind(this));
-
-    this.__childConnectedCallback = this.__childConnectedCallback.bind(this);
-    this.__childDisconnectedCallback = this.__childDisconnectedCallback.bind(this);
-
-    this.contentChangedCallback = debounce(this.contentChangedCallback.bind(this));
-    this.childrenChangedCallback = debounce(this.childrenChangedCallback.bind(this));
-    this.__notifyParentEvent = debounce(this.__notifyParentEvent.bind(this));
+    this._state = new State({}, this.renderCallback);
+    this._globalState = globalState;
 
     this._options.subscribe('notifyParent', this.__notifyParent.bind(this));
     this._options.subscribe('listenChildren', this.__listenChildren.bind(this));
     this._options.subscribe('watchContent', this.__watchContent.bind(this));
+    this._options.subscribe('render', this.__renderGlobalState.bind(this));
 
     this.__mutationObserver = new MutationObserver(this.contentChangedCallback);
     this.__notifyParentSubscription = null;
     this.__listenChildrenSubscription = null;
+    this.__renderGlobalStateSubscription = null;
 
     Object.keys(options).forEach(option => {
       this._options.set(option, options[option]);
     });
+
+    if (this.stateAttributes) {
+      this.stateAttributes.forEach(attribute => {
+        const transformedName = attribute.replace(/-([a-z])/g, g => g[1].toUpperCase());
+
+        Object.defineProperty(this, transformedName, {
+          get() { this._state.get(transformedName); },
+          set(value) { this._state.set(transformedName, value); },
+          configurable: true
+        });
+      });
+    }
   }
 
   connectedCallback() {
-    const renderContainer = this._options.get('renderContainer');
-    const appendRenderContainer = this._options.get('appendRenderContainer');
+    this.__connected = true;
+
+    const renderContainer = this._options.get('render.container');
 
     if (renderContainer) {
-      if (appendRenderContainer) { this.appendChild(renderContainer); }
+      if (this._options.get('render.autoAppendContainer')) { this.appendChild(renderContainer); }
 
       this.renderCallback();
     }
@@ -54,7 +77,9 @@ export default class SmartComponent extends HTMLElement {
   }
 
   disconnectedCallback() {
-    const renderContainer = this._options.get('renderContainer');
+    this.__connected = false;
+
+    const renderContainer = this._options.get('render.container');
 
     if (renderContainer) { renderContainer.parentNode.removeChild(renderContainer); }
 
@@ -66,9 +91,18 @@ export default class SmartComponent extends HTMLElement {
     this[transformedName] = newValue;
   }
 
-  renderCallback() {}
+  renderCallback() {
+    if (this.__connected && this._options.get('render.container') && this._options.get('render.template')) {
+      this._render();
+    }
+  }
+
   contentChangedCallback() {}
   childrenChangedCallback() {}
+
+  _render() {
+    render(this._options.get('render.container'), this._options.get('render.template')(this._state, this._globalState));
+  }
 
   _convertAttributeToBoolean(value) {
     return value !== undefined && value !== null && value !== false && value !== 'false';
@@ -79,11 +113,8 @@ export default class SmartComponent extends HTMLElement {
     return parser.parseFromString(content, 'text/html').body.childNodes[0];
   }
 
-  _dispatchEvent(eventName, detail = {}) {
-    this.dispatchEvent(new CustomEvent(eventName, {
-      detail,
-      bubbles: true
-    }));
+  _dispatchEvent(eventName, detail = {}, bubbles = true) {
+    this.dispatchEvent(new CustomEvent(eventName, { detail, bubbles }));
   }
 
   __notifyParent(value) {
@@ -102,7 +133,7 @@ export default class SmartComponent extends HTMLElement {
     this.dispatchEvent(new CustomEvent(eventName, {
       detail: {
         id: this._options.get('id'),
-        data: this._state.get()
+        state: this._state.get()
       },
       bubbles: true
     }));
@@ -125,14 +156,14 @@ export default class SmartComponent extends HTMLElement {
     event.target.addEventListener('_child.disconnected', this.__childDisconnectedCallback, true);
 
     const childrenCollection = this._options.get('connectedChildren');
-    childrenCollection.upsert({ id: event.detail.id, element: event.target, data: event.detail.data });
+    childrenCollection.upsert({ id: event.detail.id, element: event.target, state: event.detail.state });
     this._options.triggerChange('connectedChildren');
   }
 
   __childChangedCallback(event) {
     event.stopPropagation();
     const childrenCollection = this._options.get('connectedChildren');
-    childrenCollection.upsert({ id: event.detail.id, element: event.target, data: event.detail.data });
+    childrenCollection.upsert({ id: event.detail.id, element: event.target, state: event.detail.state });
     this._options.triggerChange('connectedChildren');
   }
 
@@ -153,6 +184,17 @@ export default class SmartComponent extends HTMLElement {
       });
     } else {
       this.__mutationObserver.disconnect();
+    }
+  }
+
+  __renderGlobalState() {
+    const globalState = this._options.get('render.globalState');
+
+    if (globalState) {
+      const globalStateKey = globalState === true ? '' : globalState;
+      this.__renderGlobalStateSubscription = this._globalState.subscribe(globalStateKey, this.renderCallback);
+    } else {
+      this.__renderGlobalStateSubscription.unsubscribe();
     }
   }
 }

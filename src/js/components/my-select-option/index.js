@@ -1,6 +1,6 @@
 import SmartComponent from '../../libs/smartcomponent';
 
-export default class MyOption extends SmartComponent {
+export default class MySelectOption extends SmartComponent {
   init() {
     super.init({
       notifyParent: true,
