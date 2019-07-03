@@ -1,5 +1,5 @@
 import CustomEvent from 'custom-event';
-import { render } from 'lighterhtml';
+import { html, render } from 'lighterhtml';
 import debounce from './debounce';
 import State from './state';
 import globalState from './global-state';
@@ -26,7 +26,6 @@ export default class SmartComponent extends HTMLElement {
       connectedChildren: new Collection(),
       render: {
         container: null,
-        template: null,
         globalState: false,
         autoAppendContainer: true
       }
@@ -49,8 +48,8 @@ export default class SmartComponent extends HTMLElement {
       this._options.set(option, options[option]);
     });
 
-    if (this.stateAttributes) {
-      this.stateAttributes.forEach(attribute => {
+    if (this.constructor.stateAttributes) {
+      this.constructor.stateAttributes.forEach(attribute => {
         const transformedName = attribute.replace(/-([a-z])/g, g => g[1].toUpperCase());
 
         Object.defineProperty(this, transformedName, {
@@ -68,7 +67,9 @@ export default class SmartComponent extends HTMLElement {
     const renderContainer = this._options.get('render.container');
 
     if (renderContainer) {
-      if (this._options.get('render.autoAppendContainer')) { this.appendChild(renderContainer); }
+      const renderAutoAppendContiner = this._options.get('render.autoAppendContainer');
+
+      if (renderAutoAppendContiner && renderContainer !== this) { this.appendChild(renderContainer); }
 
       this.renderCallback();
     }
@@ -92,7 +93,10 @@ export default class SmartComponent extends HTMLElement {
   }
 
   renderCallback() {
-    if (this.__connected && this._options.get('render.container') && this._options.get('render.template')) {
+    const renderContainer = this._options.get('render.container');
+    const renderTemplate = this.constructor.template;
+
+    if (this.__connected && renderContainer && renderTemplate) {
       this._render();
     }
   }
@@ -101,7 +105,12 @@ export default class SmartComponent extends HTMLElement {
   childrenChangedCallback() {}
 
   _render() {
-    render(this._options.get('render.container'), this._options.get('render.template')(this._state, this._globalState));
+    const renderContainer = this._options.get('render.container');
+    const renderTemplate = this.constructor.template(this);
+
+    render(renderContainer, () => {
+      return typeof renderTemplate === 'string' ? html`${{ html: renderTemplate }}` : renderTemplate
+    });
   }
 
   _convertAttributeToBoolean(value) {

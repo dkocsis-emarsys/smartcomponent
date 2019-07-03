@@ -3,7 +3,10 @@ import SmartComponent from '../../libs/smartcomponent';
 export default class MyExample3Child extends SmartComponent {
   init() {
     super.init({
-      notifyParent: true
+      notifyParent: true,
+      render: {
+        container: this
+      }
     });
   }
 
@@ -11,7 +14,11 @@ export default class MyExample3Child extends SmartComponent {
     return ['value'];
   }
 
-  set value(value) {
-    this.textContent = `Value of the parent is: ${value}`;
+  static get stateAttributes() {
+    return ['value'];
+  }
+
+  static get template() {
+    return component => `Value of the parent is: <b>${component._state.get('value')}</b>`;
   }
 }

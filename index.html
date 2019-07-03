@@ -30,7 +30,7 @@
         <li>Unified attribute and property handling</li>
         <li>Auto-bind property to state</li>
         <li>Communication between parent and child components</li>
-        <li>Lighterhtml based templating</li>
+        <li>Lighterhtml based or custom templating</li>
         <li>Local and global state management</li>
         <li>Extra callbacks to never miss a moment</li>
       </ul>
@@ -41,7 +41,7 @@
         <h3>Attribute & Property handling</h3>
 
         <div>
-          <my-example-1>Value of the component is: 0</my-example-1>
+          <my-example-1 value="0.5576996159982153"></my-example-1>
         </div>
 
         <button id="example-1-button-property">Set Random value through property</button>
@@ -63,7 +63,6 @@
 
         <div>
           <my-example-2>
-            <div id="my-example-2-value"></div>
             <my-example-2-child></my-example-2-child>
           </my-example-2>
         </div>
@@ -108,8 +107,8 @@
 
         <script>
           document.querySelector('#example-4-button-local').addEventListener('click', () => {
-            document.querySelector('my-example-4-a').local = Math.random();
-            document.querySelector('my-example-4-b').local = Math.random();
+            document.querySelector('my-example-4-a').value = Math.random();
+            document.querySelector('my-example-4-b').value = Math.random();
           });
 
           document.querySelector('#example-4-button-global').addEventListener('click', () => {
@@ -160,10 +159,6 @@
           <tr>
             <td class="s-api__col s-api__col--name"><b>render.container</b></td>
             <td class="s-api__col">Default node to render content in.</td>
-          </tr>
-          <tr>
-            <td class="s-api__col s-api__col--name"><b>render.template</b></td>
-            <td class="s-api__col">Default template to append to container.</td>
           </tr>
           <tr>
             <td class="s-api__col s-api__col--name"><b>render.globalState</b></td>

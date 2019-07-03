@@ -14,8 +14,8 @@ export default class MyExample3 extends SmartComponent {
     return ['value'];
   }
 
-  set value(value) {
-    this._state.set('value', value);
+  static get stateAttributes() {
+    return ['value'];
   }
 
   childrenChangedCallback(collection) {

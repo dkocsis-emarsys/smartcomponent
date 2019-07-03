@@ -2,33 +2,31 @@ import SmartComponent from '../../libs/smartcomponent';
 
 export default class MyExample4B extends SmartComponent {
   init() {
-    super.init();
+    this._globalStatePrefix = 'example4';
+
+    super.init({
+      render: {
+        container: this,
+        globalState: this._globalStatePrefix
+      }
+    });
 
     this._state.set('value', Math.random());
-
-    this._globalState.subscribe('example4.value', this._setHTML.bind(this));
-    this._state.subscribe('value', this._setHTML.bind(this));
   }
 
   static get observedAttributes() {
-    return ['local'];
+    return ['value'];
   }
 
-  set local(value) {
-    this._state.set('value', value);
+  static get stateAttributes() {
+    return ['value'];
   }
 
-  connectedCallback() {
-    super.connectedCallback();
-
-    this._setHTML();
-  }
-
-  _setHTML() {
-    this.innerHTML = `
-      Global state value is: ${this._globalState.get('example4.value')}
+  static get template() {
+    return component => `
+      Global state value is: <b>${component._globalState.get(`${component._globalStatePrefix}.value`)}</b>
       |
-      Local state value is: ${this._state.get('value')}
+      Local state value is: <b>${component._state.get('value')}</b>
     `;
   }
 }
