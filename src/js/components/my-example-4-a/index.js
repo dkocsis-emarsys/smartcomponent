@@ -12,7 +12,6 @@ export default class MyExample4A extends SmartComponent {
     });
 
     this._globalState.set('example4.value', Math.random());
-    this._state.set('value', Math.random());
   }
 
   static get observedAttributes() {
@@ -21,6 +20,14 @@ export default class MyExample4A extends SmartComponent {
 
   static get stateAttributes() {
     return ['value'];
+  }
+
+  static get validationRules() {
+    return {
+      value: {
+        defaultValue: Math.random()
+      }
+    };
   }
 
   static get template() {

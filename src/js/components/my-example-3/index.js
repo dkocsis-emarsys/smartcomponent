@@ -6,7 +6,6 @@ export default class MyExample3 extends SmartComponent {
       listenChildren: true
     });
 
-    this._state.set('value', Math.random());
     this._state.subscribe('value', this._updateChildrenValue.bind(this));
   }
 
@@ -16,6 +15,14 @@ export default class MyExample3 extends SmartComponent {
 
   static get stateAttributes() {
     return ['value'];
+  }
+
+  static get validationRules() {
+    return {
+      value: {
+        defaultValue: Math.random()
+      }
+    };
   }
 
   childrenChangedCallback(collection) {

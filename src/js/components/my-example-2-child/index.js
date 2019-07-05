@@ -5,8 +5,6 @@ export default class MyExample2Child extends SmartComponent {
     super.init({
       notifyParent: true
     });
-
-    this._state.set('value', Math.random());
   }
 
   static get observedAttributes() {
@@ -15,5 +13,13 @@ export default class MyExample2Child extends SmartComponent {
 
   static get stateAttributes() {
     return ['value'];
+  }
+
+  static get validationRules() {
+    return {
+      value: {
+        defaultValue: Math.random()
+      }
+    };
   }
 }

@@ -41,7 +41,7 @@
         <h3>Attribute & Property handling</h3>
 
         <div>
-          <my-example-1 value="0.5576996159982153"></my-example-1>
+          <my-example-1></my-example-1>
         </div>
 
         <button id="example-1-button-property">Set Random value through property</button>
@@ -49,11 +49,11 @@
 
         <script>
           document.querySelector('#example-1-button-property').addEventListener('click', () => {
-            document.querySelector('my-example-1').value = Math.random();
+            document.querySelector('my-example-1').value = Math.random() > 0.5 ? 1 : -1;
           });
 
           document.querySelector('#example-1-button-attribute').addEventListener('click', () => {
-            document.querySelector('my-example-1').setAttribute('value', Math.random());
+            document.querySelector('my-example-1').setAttribute('value', Math.random() > 0.5 ? 1 : -1);
           });
         </script>
       </div>
@@ -121,19 +121,6 @@
         <h3>Templating</h3>
 
         <my-example-5></my-example-5>
-
-        <input id="example-5-input-name" value="John Doe" placeholder="Name">
-        <input id="example-5-input-age" type="number" value="22" placeholder="Age">
-
-        <script>
-          document.querySelector('#example-5-input-name').addEventListener('input', event => {
-            document.querySelector('my-example-5').name = event.target.value;
-          });
-
-          document.querySelector('#example-5-input-age').addEventListener('input', event => {
-            document.querySelector('my-example-5').age = event.target.value;
-          });
-        </script>
       </div>
 
       <div>

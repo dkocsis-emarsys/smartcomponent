@@ -52,11 +52,18 @@ export default class SmartComponent extends HTMLElement {
       this.constructor.stateAttributes.forEach(attribute => {
         const transformedName = attribute.replace(/-([a-z])/g, g => g[1].toUpperCase());
 
+        const validationRules = this.constructor.validationRules;
+        const validationRule = validationRules ? validationRules[transformedName] : false;
+
         Object.defineProperty(this, transformedName, {
           get() { this._state.get(transformedName); },
-          set(value) { this._state.set(transformedName, value); },
+          set(value) { this._state.set(transformedName, this.__transformValue(value, validationRule)); },
           configurable: true
         });
+
+        if (validationRule && validationRule.hasOwnProperty('defaultValue')) {
+          this[transformedName] = validationRule.defaultValue;
+        }
       });
     }
   }
@@ -104,12 +111,28 @@ export default class SmartComponent extends HTMLElement {
   contentChangedCallback() {}
   childrenChangedCallback() {}
 
+  handleEvent(event) {
+    if (!this.constructor.eventHandlers) { return; }
+
+    Object.keys(this.constructor.eventHandlers).forEach(handlerKey => {
+      const [handlerName, handlerEventType] = handlerKey.split(':');
+
+      if (event.type === handlerEventType && event.target.getAttribute('data-handler') === handlerName) {
+        const handlerFunction = this[this.constructor.eventHandlers[handlerKey]].bind(this);
+
+        if (!handlerFunction) { return; }
+
+        handlerFunction(event);
+      }
+    });
+  }
+
   _render() {
     const renderContainer = this._options.get('render.container');
     const renderTemplate = this.constructor.template(this);
 
     render(renderContainer, () => {
-      return typeof renderTemplate === 'string' ? html`${{ html: renderTemplate }}` : renderTemplate
+      return typeof renderTemplate === 'string' ? html`${{ html: renderTemplate }}` : renderTemplate();
     });
   }
 
@@ -124,6 +147,30 @@ export default class SmartComponent extends HTMLElement {
 
   _dispatchEvent(eventName, detail = {}, bubbles = true) {
     this.dispatchEvent(new CustomEvent(eventName, { detail, bubbles }));
+  }
+
+  __transformValue(value, rule) {
+    switch (rule.type) {
+      case 'number': value = Number(value); break;
+      case 'integer': value = parseInt(value); break;
+      case 'float': value = parseFloat(value); break;
+      case 'boolean': value = this._convertAttributeToBoolean(value); break;
+      case 'json': {
+        if (typeof value !== 'string') { break; }
+
+        try {
+          value = JSON.parse(value);
+        } catch(error) {
+          throw 'Value is not a valid JSON string!';
+        }
+      } break;
+    }
+
+    if (rule.allowedValues && rule.allowedValues.filter(allowedValue => value === allowedValue).length === 0) {
+      throw `Value (${value}) is not in the allowedValues list (${rule.allowedValues})!`;
+    }
+
+    return value;
   }
 
   __notifyParent(value) {

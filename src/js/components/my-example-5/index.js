@@ -13,7 +13,6 @@ export default class MyExample5 extends SmartComponent {
       }
     });
 
-    this._state.set('name', 'John Doe');
     this._globalState.set(`${this._globalStatePrefix}.age`, 22);
   }
 
@@ -25,11 +24,34 @@ export default class MyExample5 extends SmartComponent {
     return ['name'];
   }
 
+  static get validationRules() {
+    return {
+      name: {
+        defaultValue: 'John Doe'
+      }
+    };
+  }
+
   static get template() {
     return template;
   }
 
+  static get eventHandlers() {
+    return {
+      'name:input': '_nameInputHandler',
+      'age:input': '_ageInputHandler'
+    }
+  }
+
   set age(value) {
     this._globalState.set(`${this._globalStatePrefix}.age`, value);
+  }
+
+  _nameInputHandler(event) {
+    this.name = event.target.value;
+  }
+
+  _ageInputHandler(event) {
+    this.age = event.target.value;
   }
 }
