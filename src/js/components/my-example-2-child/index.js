@@ -11,15 +11,7 @@ export default class MyExample2Child extends SmartComponent {
     return ['value'];
   }
 
-  static get stateAttributes() {
+  static get boundAttributesToState() {
     return ['value'];
-  }
-
-  static get validationRules() {
-    return {
-      value: {
-        defaultValue: Math.random()
-      }
-    };
   }
 }

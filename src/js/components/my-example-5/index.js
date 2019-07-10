@@ -16,20 +16,20 @@ export default class MyExample5 extends SmartComponent {
     this._globalState.set(`${this._globalStatePrefix}.age`, 22);
   }
 
+  static get stateOptions() {
+    return {
+      name: {
+        defaultValue: 'John Default'
+      }
+    };
+  }
+
   static get observedAttributes() {
     return ['name', 'age'];
   }
 
-  static get stateAttributes() {
+  static get boundAttributesToState() {
     return ['name'];
-  }
-
-  static get validationRules() {
-    return {
-      name: {
-        defaultValue: 'John Doe'
-      }
-    };
   }
 
   static get template() {

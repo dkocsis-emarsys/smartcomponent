@@ -9,20 +9,20 @@ export default class MyExample3 extends SmartComponent {
     this._state.subscribe('value', this._updateChildrenValue.bind(this));
   }
 
-  static get observedAttributes() {
-    return ['value'];
-  }
-
-  static get stateAttributes() {
-    return ['value'];
-  }
-
-  static get validationRules() {
+  static get stateOptions() {
     return {
       value: {
         defaultValue: Math.random()
       }
     };
+  }
+
+  static get observedAttributes() {
+    return ['value'];
+  }
+
+  static get boundAttributesToState() {
+    return ['value'];
   }
 
   childrenChangedCallback(collection) {

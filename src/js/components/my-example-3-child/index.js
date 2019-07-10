@@ -14,11 +14,19 @@ export default class MyExample3Child extends SmartComponent {
     return ['value'];
   }
 
-  static get stateAttributes() {
-    return ['value'];
+  static get boundAttributesToState() {
+    return [
+      {
+        name: 'value',
+        as: 'group.value',
+        options: {
+          triggerCallback: false
+        }
+      }
+    ];
   }
 
   static get template() {
-    return component => `Value of the parent is: <b>${component._state.get('value')}</b>`;
+    return component => `Value of the parent is: <b>${component._state.get('group.value')}</b>`;
   }
 }

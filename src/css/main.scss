@@ -1,3 +1,9 @@
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
 html {
   color: #435155;
   font-family: 'Maven Pro', sans-serif;
@@ -24,13 +30,14 @@ h2 {
   line-height: 48px;
   margin-top: 24px;
   margin-bottom: 24px;
+  text-align: center;
 }
 
 h3 {
   font-size: 25px;
   line-height: 48px;
   margin-top: 24px;
-  margin-bottom: 0px;
+  margin-bottom: 24px;
 }
 
 h4 {
@@ -48,7 +55,7 @@ h5 {
 }
 
 p, ul, ol, pre, table, blockquote {
-  margin-top: 0px;
+  margin-top: 24px;
   margin-bottom: 24px;
 }
 
@@ -80,15 +87,33 @@ sub {
   bottom: -0.25em;
 }
 
+code {
+  line-height: 1.5;
+}
+
+pre[class*=language-] {
+  background: transparent;
+  font-size: 12px;
+  margin: 0;
+  padding: 0;
+}
+
 .s-header {
   align-items: center;
   display: flex;
-  height: 128px;
+  flex-direction: column;
+  height: 192px;
   justify-content: center;
   margin-bottom: 64px;
 
-  svg {
-    height: 64px;
+  &__logo {
+    height: 92px;
+  }
+
+  &__text {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 8px;
   }
 }
 
@@ -109,4 +134,55 @@ sub {
   }
 }
 
-@import 'components';
+.s-docs {
+  &__title {
+    margin: 64px 0;
+    text-align: center;
+  }
+
+  &__block {
+    display: flex;
+    flex-wrap: wrap;
+
+    &:nth-child(even) {
+      background: #f1f3f4;
+
+      .s-docs__right {
+        background: #272822;
+      }
+    }
+  }
+
+  &__left,
+  &__right {
+    flex: 0 0 auto;
+    padding: 64px;
+    width: 50%;
+  }
+
+  &__right {
+    align-items: center;
+    background: #36372f;
+    display: flex;
+  }
+
+  &__text {
+    margin: 0;
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  .s-header {
+    margin-bottom: 32px;
+  }
+
+  .s-docs__title {
+    margin: 32px 0;
+  }
+
+  .s-docs__left,
+  .s-docs__right {
+    width: 100%;
+    padding: 32px;
+  }
+}

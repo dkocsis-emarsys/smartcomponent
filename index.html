@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title>smart-component</title>
 
   <link rel="apple-touch-icon" sizes="180x180" href="./resources/apple-touch-icon.png">
@@ -10,12 +12,18 @@
   <link rel="manifest" href="./resources/site.webmanifest">
 
   <link href="https://fonts.googleapis.com/css?family=Maven+Pro:400,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/themes/prism-okaidia.min.css">
 
   <link rel="stylesheet" href="./style.css">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/plugins/normalize-whitespace/prism-normalize-whitespace.min.js"></script>
 </head>
 <body>
   <div class="s-header">
-    <svg viewBox="0 0 354 82" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M103 48.38c1.73.93 3.69 1.37 5.65 1.3 3.35-.18 5.4-2.45 5.4-5.43 0-2.85-2.4-4.45-5.18-5.47-1.02-.35-1.9-.8-2-1.8-.07-1 .5-1.93 1.78-2 1.26-.04 2.5.22 3.65.75l.45-3.45c-2.3-.8-3.53-.8-4.45-.75a5.24 5.24 0 0 0-5.05 5.45c0 3 2.5 4.42 5.3 5.45 1 .35 1.77.8 1.85 1.82.1.98-.8 1.73-1.85 1.8-.83.08-3.05.03-5.1-1.42l-.45 3.75zm22.25-9.15l-7.05-7.85h-1.15v18.15h3.62v-9.98l4.58 4.8 4.57-4.8-.02 9.98h3.62V31.38h-1.12l-7.05 7.85zm10.59 10.3h4.06l.69-1.93h5.93l.72 1.93h4.03L143.74 31h-.37l-7.53 18.53zm6.06-5.28l1.67-4.65 1.63 4.65h-3.3zm24.82 5.28l-4.15-7.38c5.25-1.52 4.63-10.5-1.75-10.5h-7.05v17.88h3.58V42.7h1.72l3.6 6.83h4.05zm-9.37-14.3h3.15c2.42 0 2.42 4 0 4h-3.15v-4zm18.27 14.3v-14.3h4.45v-3.55H167.6v3.55h4.45v14.3h3.57zm6.1-6.88h9.1v-3.32h-9.1v3.32zm23.78-6.85l.42-3.67a8.58 8.58 0 0 0-3.52-.7c-12.1 0-12.13 18.15 0 18.15 1.25 0 2.82-.3 3.92-.75l-.47-3.7c-.68.35-1.9.8-3.45.8-7.08 0-7.08-10.9 0-10.9a6.1 6.1 0 0 1 3.1.77zm12.27 13.98c12.3 0 12.3-18.43 0-18.43s-12.3 18.43 0 18.43zm0-3.7c-7.15 0-7.15-11.05 0-11.05s7.15 11.05 0 11.05zm20.77-6.85l-7.04-7.85h-1.15v18.15h3.62v-9.98l4.57 4.8 4.58-4.8-.02 9.98h3.62V31.38h-1.12l-7.06 7.85zm15.78 10.3V42.7h3.45c6.93 0 6.95-11.02 0-11.02h-7.02v17.85h3.57zm0-10.3v-4h3.15c2.4 0 2.4 4 0 4h-3.15zm20.1 10.55c12.3 0 12.3-18.43 0-18.43s-12.3 18.43 0 18.43zm0-3.7c-7.15 0-7.15-11.05 0-11.05s7.15 11.05 0 11.05zm16.15-6.28l9.05 10.11h.95V31.68h-3.6v10.1l-9.02-10.5H287v18.25h3.57V39.8zm23.28 9.73v-3.58h-5.68v-3.57h4.7V38.8h-4.7v-3.57h5.37v-3.58h-8.94v17.88h9.25zm6.92-9.73l9.05 10.11h.95V31.68h-3.6v10.1l-9.03-10.5h-.94v18.25h3.57V39.8zm20.55 9.73v-14.3h4.45v-3.55h-12.49v3.55h4.45v14.3h3.59z" fill="#3B6004"/><path d="M8 40L28.75 4h41.5L8 40z" fill="#97C91A"/><path d="M8 40l20.75 36L49.5 64 8 40z" fill="#97C91A"/><path d="M91 40L70.25 28v24L91 40z" fill="#97C91A"/><path d="M8 40L28.75 4h41.5L8 40z" fill="#97C91A"/><path d="M91 40L70.25 4 49.5 16 91 40zM91 40L70.25 76h-41.5L91 40zM8 40l20.75 12V28L8 40z" fill="#7CAC13"/></svg>
+    <svg class="s-header__logo" viewBox="0 0 514 514" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M246.15 208.03a8.63 8.63 0 0 0-7.38-2.27l-52.38 8.76a8.57 8.57 0 0 0-4.81 2.55L27.7 378.25a8.63 8.63 0 0 0 .29 12.2l46.06 43.96a8.6 8.6 0 0 0 12.19-.28l153.87-161.18 6.04-64.92zm0 0a8.58 8.58 0 0 1 2.6 7.26m-2.6-7.26l2.6 7.26m0 0l-6.31 52.73m6.3-52.73l-6.3 52.73m0 0a8.65 8.65 0 0 1-2.33 4.93l2.33-4.93z" fill="#CCD1D9" stroke="#434A54" stroke-width="4"/><path d="M182.43 268.22a8.63 8.63 0 1 1-8.82-8.43 8.62 8.62 0 0 1 8.82 8.43zM174.71 307.07a8.63 8.63 0 1 1-.4-17.25 8.63 8.63 0 0 1 .4 17.25zM153.09 298.95a8.62 8.62 0 1 1-17.24.39 8.62 8.62 0 1 1 17.24-.39zm-19.24.44zM153.79 329a8.62 8.62 0 1 1-8.83-8.43 8.64 8.64 0 0 1 8.83 8.42zM123.74 329.7a8.62 8.62 0 1 1-17.24.4 8.63 8.63 0 1 1 17.24-.4zm-19.24.45zM124.44 359.73a8.62 8.62 0 1 1-8.82-8.41 8.61 8.61 0 0 1 8.82 8.41z" fill="#AAB2BC" stroke="#434A54" stroke-width="4"/><path d="M383.34 97.9c24.8 48.28 53.43 123.74 105.72 278.7.8 2.41.5 5.05-.81 7.23a8.56 8.56 0 0 1-6.04 4.06l-130.7 20.43h-.02a8.65 8.65 0 0 1-9.77-6.67l-15.25-69.25a8.64 8.64 0 0 1 5.05-9.8l15.05-6.38 1.8-.76-.72-1.81c-11.03-28.09-43.85-111.19-65.16-160.08-12.38-28.4-14.7-60.8-6.58-93.73 5.99-24.42 15.61-40.68 16.2-41.66v-.01a8.62 8.62 0 0 1 10.36-3.64c14.53 5.35 27.63 12.4 40.63 24.95 13.03 12.57 26.04 30.73 40.24 58.42z" fill="#E6E9ED" stroke="#434A54" stroke-width="4"/><path d="M76.39 353.98H437.6c39.92 0 72.4 32.48 72.4 72.38s-32.47 72.38-72.4 72.38H76.4C36.47 498.74 4 466.27 4 426.36c0-39.9 32.47-72.38 72.39-72.38z" fill="#ED5564" stroke="#434A54" stroke-width="4"/><path opacity=".1" d="M437.6 490.11H76.4c-39.24 0-71.46-30.52-74.2-69.07-.13 1.76-.19 3.53-.19 5.32 0 41.01 33.37 74.38 74.39 74.38H437.6c41.03 0 74.4-33.37 74.4-74.38 0-1.79-.06-3.56-.19-5.32-2.74 38.55-34.95 69.07-74.2 69.07z" fill="#080808"/><path d="M437.7 435.07h-42.66a8.62 8.62 0 1 1 0-17.25h42.66a8.62 8.62 0 1 1 0 17.25z" fill="#CCD1D9" stroke="#434A54" stroke-width="4"/><path d="M416.37 456.4a8.62 8.62 0 0 1-8.63-8.62v-42.66a8.62 8.62 0 1 1 17.25 0v42.66a8.63 8.63 0 0 1-8.62 8.63z" fill="#E6E9ED" stroke="#434A54" stroke-width="4"/><path d="M93.1 420.26a8.64 8.64 0 0 1-12.2 12.2 8.64 8.64 0 0 1 12.2-12.2z" fill="#434A54" stroke="#434A54" stroke-width="4"/><path d="M410.29 235.64l-28.75-74.75v-.01a8.62 8.62 0 1 1 16.1-6.18l28.74 74.75a8.62 8.62 0 1 1-16.1 6.2z" fill="#CCD1D9" stroke="#434A54" stroke-width="4"/></svg>
+    <div class="s-header__text">smart-component</div>
   </div>
 
   <div class="s-container">
@@ -28,179 +36,392 @@
 
       <ul>
         <li>Unified attribute and property handling</li>
+        <li>State value transforming</li>
         <li>Auto-bind property to state</li>
         <li>Communication between parent and child components</li>
         <li>Lighterhtml based or custom templating</li>
         <li>Local and global state management</li>
         <li>Extra callbacks to never miss a moment</li>
+        <li>And much more...</li>
       </ul>
-
-      <h2>Examples & Documentation</h2>
-
-      <div id="example-1">
-        <h3>Attribute & Property handling</h3>
-
-        <div>
-          <my-example-1></my-example-1>
-        </div>
-
-        <button id="example-1-button-property">Set Random value through property</button>
-        <button id="example-1-button-attribute">Set Random value through attribute</button>
-
-        <script>
-          document.querySelector('#example-1-button-property').addEventListener('click', () => {
-            document.querySelector('my-example-1').value = Math.random() > 0.5 ? 1 : -1;
-          });
-
-          document.querySelector('#example-1-button-attribute').addEventListener('click', () => {
-            document.querySelector('my-example-1').setAttribute('value', Math.random() > 0.5 ? 1 : -1);
-          });
-        </script>
-      </div>
-
-      <div id="example-2">
-        <h3>Child - parent communication</h3>
-
-        <div>
-          <my-example-2>
-            <my-example-2-child></my-example-2-child>
-          </my-example-2>
-        </div>
-
-        <button id="example-2-button-property">Set Random value on child</button>
-
-        <script>
-          document.querySelector('#example-2-button-property').addEventListener('click', () => {
-            document.querySelector('my-example-2-child').value = Math.random();
-          });
-        </script>
-      </div>
-
-      <div id="example-3">
-        <h3>Parent - child communication</h3>
-
-        <div>
-          <my-example-3>
-            <div><my-example-3-child></my-example-3-child></div>
-            <div><my-example-3-child></my-example-3-child></div>
-            <div><my-example-3-child></my-example-3-child></div>
-          </my-example-3>
-        </div>
-
-        <button id="example-3-button-property">Set Random value on parent</button>
-
-        <script>
-          document.querySelector('#example-3-button-property').addEventListener('click', () => {
-            document.querySelector('my-example-3').value = Math.random();
-          });
-        </script>
-      </div>
-
-      <div id="example-4">
-        <h3>Local & global state</h3>
-
-        <div><my-example-4-a></my-example-4-a></div>
-        <div><my-example-4-b></my-example-4-b></div>
-
-        <button id="example-4-button-local">Set Random value on local state</button>
-        <button id="example-4-button-global">Set Random value on global state</button>
-
-        <script>
-          document.querySelector('#example-4-button-local').addEventListener('click', () => {
-            document.querySelector('my-example-4-a').value = Math.random();
-            document.querySelector('my-example-4-b').value = Math.random();
-          });
-
-          document.querySelector('#example-4-button-global').addEventListener('click', () => {
-            document.querySelector('my-example-4-a').global = Math.random();
-          });
-        </script>
-      </div>
-
-      <div id="example-5">
-        <h3>Templating</h3>
-
-        <my-example-5></my-example-5>
-      </div>
-
-      <div>
-        <h3>Options</h3>
-
-        <table class="s-api">
-          <tr>
-            <td class="s-api__col s-api__col--name"><b>listenChildren</b></td>
-            <td class="s-api__col">Subscribes to childrens which notifies parent.</td>
-          </tr>
-          <tr>
-            <td class="s-api__col s-api__col--name"><b>notifyParent</b></td>
-            <td class="s-api__col">Notify parent on connect, disconnect and state changes.</td>
-          </tr>
-          <tr>
-            <td class="s-api__col s-api__col--name"><b>watchContent</b></td>
-            <td class="s-api__col">Attach a mutation observer to the component and tunnel it to contentChangedCallback.</td>
-          </tr>
-          <tr>
-            <td class="s-api__col s-api__col--name"><b>connectedChildren</b></td>
-            <td class="s-api__col">Stores a list of listened children.</td>
-          </tr>
-          <tr>
-            <td class="s-api__col s-api__col--name"><b>render.container</b></td>
-            <td class="s-api__col">Default node to render content in.</td>
-          </tr>
-          <tr>
-            <td class="s-api__col s-api__col--name"><b>render.globalState</b></td>
-            <td class="s-api__col">Call render on global state change.</td>
-          </tr>
-          <tr>
-            <td class="s-api__col s-api__col--name"><b>render.autoAppendContainer</b></td>
-            <td class="s-api__col">Automatically append render container to component.</td>
-          </tr>
-        </table>
-      </div>
-
-      <div>
-        <h3>Callbacks</h3>
-
-        <table class="s-api">
-          <tr>
-            <td class="s-api__col s-api__col--name"><b>contentChangedCallback</b></td>
-            <td class="s-api__col">Called when any kind of change happens with the component or it's children.</td>
-          </tr>
-          <tr>
-            <td class="s-api__col s-api__col--name"><b>childrenChangedCallback</b></td>
-            <td class="s-api__col">Called when child connects or any kind of change happens with the listened child's state.</td>
-          </tr>
-          <tr>
-            <td class="s-api__col s-api__col--name"><b>renderCallback</b></td>
-            <td class="s-api__col">Called when rendering happens after state change. Optionally, you can listen on the full or partial global state too.</td>
-          </tr>
-        </table>
-      </div>
-
-      <div>
-        <h3>Helpers</h3>
-
-        <table class="s-api">
-          <tr>
-            <td class="s-api__col s-api__col--name"><b>_render()</b></td>
-            <td class="s-api__col">Force rerender of the component if needed for some reason.</td>
-          </tr>
-          <tr>
-            <td class="s-api__col s-api__col--name"><b>_convertAttributeToBoolean(string)</b></td>
-            <td class="s-api__col">Makes string 'false' and empty to become boolean false.</td>
-          </tr>
-          <tr>
-            <td class="s-api__col s-api__col--name"><b>_parseHTML(string)</b></td>
-            <td class="s-api__col">Creates real DOM element from string.</td>
-          </tr>
-          <tr>
-            <td class="s-api__col s-api__col--name"><b>_dispatchEvent(eventName, [details={}], [bubbles=true])</b></td>
-            <td class="s-api__col">Creates a custom event.</td>
-          </tr>
-        </table>
-      </div>
-
     </div>
+  </div>
+
+  <div class="s-docs">
+    <h2 class="s-docs__title">Documentation</h2>
+
+    <h3 class="s-docs__title">Attributes, properties and basic templating</h3>
+
+    <div class="s-docs__block">
+      <div class="s-docs__left">
+        <p class="s-docs__text">Add <b>observedAttributes</b> getter to the component to listen on a list of attributes or properties.</p>
+      </div>
+      <div class="s-docs__right">
+        <pre><code class="language-javascript">
+          static get observedAttributes() {
+            return ['value'];
+          }
+        </code></pre>
+      </div>
+    </div>
+
+    <div class="s-docs__block">
+      <div class="s-docs__left">
+        <p class="s-docs__text">Every component has built in state management and you can easily make a connection between properties and state by defining <b>boundAttributesToState</b> getter.</p>
+      </div>
+      <div class="s-docs__right">
+        <pre><code class="language-javascript">
+          static get boundAttributesToState() {
+            return ['value'];
+          }
+        </code></pre>
+      </div>
+    </div>
+
+    <div class="s-docs__block">
+      <div class="s-docs__left">
+        <p class="s-docs__text">Templating has never been easier than it is now with smart-component. Just define a <b>template</b> getter on the component, and pass a container to the component options to enable rendering.</p>
+      </div>
+      <div class="s-docs__right">
+        <pre><code class="language-javascript">
+          init() {
+            super.init({
+              render: {
+                container: this
+              }
+            });
+          }
+
+          ...
+
+          static get template() {
+            return component => `The value is: &lt;b&gt;${component._state.get('value')}&lt;/b&gt;`;
+          }
+        </code></pre>
+      </div>
+    </div>
+
+    <div class="s-docs__block">
+      <div class="s-docs__left">
+        <div class="s-example">
+          <h3>Test the final component</h3>
+
+          <div>
+            <my-example-1 value="0"></my-example-1>
+          </div>
+          <button id="example-1-button-property">Set random value on component</button>
+
+          <script>
+            document.querySelector('#example-1-button-property').addEventListener('click', () => {
+              document.querySelector('my-example-1').value = Math.random();
+            });
+          </script>
+        </div>
+      </div>
+      <div class="s-docs__right">
+        <pre><code class="language-javascript">
+          class MyExample1 extends SmartComponent {
+            init() {
+              super.init({
+                render: {
+                  container: this
+                }
+              });
+            }
+
+            static get observedAttributes() {
+              return ['value'];
+            }
+
+            static get boundAttributesToState() {
+              return ['value'];
+            }
+
+            static get template() {
+              return component => `The value is: &lt;b&gt;${component._state.get('value')}&lt;/b&gt;`;
+            }
+          }
+        </code></pre>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="s-docs">
+    <h3 class="s-docs__title">Communication between parent and child</h3>
+
+    <div class="s-docs__block">
+      <div class="s-docs__left">
+        <p class="s-docs__text">First of all, in the parent component's constructor you have to set <b>listenChildren</b> option to <i>true</i>. It will prepares the parent to be able to receive events from children.</p>
+      </div>
+      <div class="s-docs__right">
+        <pre><code class="language-javascript">
+          init() {
+            super.init({
+              listenChildren: true
+            });
+          }
+        </code></pre>
+      </div>
+    </div>
+
+    <div class="s-docs__block">
+      <div class="s-docs__left">
+        <p class="s-docs__text">You have to do almost the same thing with the child component, except the option called <b>notifyParent</b>. This will make the component send events on <i>connect, disconnect and state changes</i>.</p>
+      </div>
+      <div class="s-docs__right">
+        <pre><code class="language-javascript">
+          init() {
+            super.init({
+              notifyParent: true
+            });
+          }
+        </code></pre>
+      </div>
+    </div>
+
+    <div class="s-docs__block">
+      <div class="s-docs__left">
+        <p class="s-docs__text">In the parent component, a new callback can be used for handling the events, <b>childrenChangedCallback</b>. This callback gives back the whole list of connected children. What you doing with this data is up to you. In this example we will use it to store the child's value from it's state.</p>
+      </div>
+      <div class="s-docs__right">
+        <pre><code class="language-javascript">
+          childrenChangedCallback(collection) {
+            const childrenList = collection.get();
+
+            const items = childrenList.map(child => {
+              this._state.set('childValue', child.state.value);
+            });
+          }
+        </code></pre>
+      </div>
+    </div>
+
+    <div class="s-docs__block">
+      <div class="s-docs__left">
+        <div class="s-example">
+          <h3>Test the final component</h3>
+
+          <div>
+            <my-example-2>
+              <my-example-2-child value="0"></my-example-2-child>
+            </my-example-2>
+          </div>
+          <button id="example-2-button-property">Set random value on child</button>
+
+          <script>
+            document.querySelector('#example-2-button-property').addEventListener('click', () => {
+              document.querySelector('my-example-2-child').value = Math.random();
+            });
+          </script>
+        </div>
+      </div>
+      <div class="s-docs__right">
+        <pre><code class="language-javascript">
+          // Parent definition
+          class MyExample2 extends SmartComponent {
+            init() {
+              this._container = this._parseHTML(`&lt;div class="my-example-2-value"&gt;&lt;/div&gt;`);
+
+              super.init({
+                listenChildren: true,
+                render: {
+                  container: this._container
+                }
+              });
+            }
+
+            static get template() {
+              return component => `Value of the child component is: &lt;b&gt;${component._state.get('childValue')}&lt;/b&gt;`;
+            }
+
+            childrenChangedCallback(collection) {
+              const childrenList = collection.get();
+
+              const items = childrenList.map(child => {
+                this._state.set('childValue', child.state.value);
+              });
+            }
+          }
+
+          /*------------------------------------------------------------------*/
+
+          // Child definition
+          class MyExample2Child extends SmartComponent {
+            init() {
+              super.init({
+                notifyParent: true
+              });
+            }
+
+            static get observedAttributes() {
+              return ['value'];
+            }
+
+            static get boundAttributesToState() {
+              return ['value'];
+            }
+          }
+
+        </code></pre>
+      </div>
+    </div>
+
+    <div class="s-docs__block">
+      <div class="s-docs__left">
+        <p class="s-docs__text">If you don't want to notify the parent on every state change you can define it in the <b>boundAttributesToState</b>. It's useful when the parent sets this value on the component, so it won't report back the change.</p>
+      </div>
+      <div class="s-docs__right">
+        <pre><code class="language-javascript">
+          static get boundAttributesToState() {
+            return [
+              {
+                name: 'value',
+                options: {
+                  triggerCallback: false
+                }
+              }
+            ];
+          }
+        </code></pre>
+      </div>
+    </div>
+
+    <div class="s-docs__block">
+      <div class="s-docs__left">
+        <p class="s-docs__text">Another interesting option in the <b>boundAttributesToState</b> is that you can tell the component to store the value with a different name in state.</p>
+      </div>
+      <div class="s-docs__right">
+        <pre><code class="language-javascript">
+          static get boundAttributesToState() {
+            return [
+              {
+                name: 'value',
+                as: 'stateValue'
+              }
+            ];
+          }
+        </code></pre>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="s-docs">
+    <h3 class="s-docs__title">State mangement</h3>
+
+    <div class="s-docs__block">
+      <div class="s-docs__left">
+        <p class="s-docs__text">Every component has it's own state and accesses the global state.</p>
+      </div>
+      <div class="s-docs__right">
+        <pre><code class="language-javascript">
+          this._state.set('value', 1);         // Sets value on local state
+          this._state.get('value');            // Gets value from local state
+
+          this._globalState.set('value', 2);   // Sets value on global state
+          this._globalState.get('value');      // Gets value from global state
+        </code></pre>
+      </div>
+    </div>
+
+    <div class="s-docs__block">
+      <div class="s-docs__left">
+        <p class="s-docs__text">You can pass options to the state on set.</p>
+      </div>
+      <div class="s-docs__right">
+        <pre><code class="language-javascript">
+          this._state.set('value', 1, {
+            triggerCallback: false,     // Won't call the attached callbacks
+            triggerRender: false        // Won't call render function
+          });
+        </code></pre>
+      </div>
+    </div>
+
+    <div class="s-docs__block">
+      <div class="s-docs__left">
+        <p class="s-docs__text">With the awesome subscription system, you will always know, what's happening.</p>
+      </div>
+      <div class="s-docs__right">
+        <pre><code class="language-javascript">
+          this._state.subscribe('value', console.log);
+          this._state.set('value', 1); // Logs '1, "value"'
+        </code></pre>
+      </div>
+    </div>
+
+    <div class="s-docs__block">
+      <div class="s-docs__left">
+        <p class="s-docs__text">Every subscription comes with an unsubscribe.</p>
+      </div>
+      <div class="s-docs__right">
+        <pre><code class="language-javascript">
+          const subscription = this._state.subscribe('value', console.log);
+          this._state.set('value', 1); // Logs '1, "value"'
+          subscription.unsubscribe();
+          this._state.set('value', 1); // Logs nothing
+        </code></pre>
+      </div>
+    </div>
+
+    <div class="s-docs__block">
+      <div class="s-docs__left">
+        <p class="s-docs__text">It has the ability to nest values.</p>
+      </div>
+      <div class="s-docs__right">
+        <pre><code class="language-javascript">
+          this._state.set('group.value', 1);
+
+          this._state.get('group.value');   // Gets 1
+          this._state.get('group');         // Gets { value: 1 }
+          this._state.get();                // Ultimately gets { group: { value: 1 } }
+        </code></pre>
+      </div>
+    </div>
+
+    <div class="s-docs__block">
+      <div class="s-docs__left">
+        <p class="s-docs__text">State values can be formatted. Basically, there is two ways of defining it. You can use the <b>stateOptions</b> getter or calling the <b>setOptions()</b> function on state.<br>Transforming has some predefined options, these are <i>number, integer, float, boolean, json</i>. When using one of these, <b>transformFunction</b> won't be called.</p>
+      </div>
+      <div class="s-docs__right">
+        <pre><code class="language-javascript">
+          static get stateOptions() {
+            return {
+              value: {
+                type: 'custom',
+                transformFunction: value => Number(value).toFixed(1)
+              }
+            }
+          }
+
+          /* OR */
+
+          this._state.setOptions('value', {
+            type: 'custom',
+            transformFunction: value => Number(value).toFixed(1)
+          });
+        </code></pre>
+      </div>
+    </div>
+
+    <div class="s-docs__block">
+      <div class="s-docs__left">
+        <p class="s-docs__text">If you defined a default value for the state variable, you can access it with calling <b>getDefaultValue()</b> function.</p>
+      </div>
+      <div class="s-docs__right">
+        <pre><code class="language-javascript">
+          this._state.setOptions('value', {
+            defaultValue: 1
+          });
+
+          ...
+
+          this._state.getDefaultValue(); // Gets 1
+        </code></pre>
+      </div>
+    </div>
+
   </div>
 
   <script src="https://polyfill.io/v3/polyfill.min.js?features=Symbol%2CArray.prototype.find"></script>

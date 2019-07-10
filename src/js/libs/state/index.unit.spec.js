@@ -282,7 +282,7 @@ describe('State', () => {
     });
   });
 
-describe('.triggerChange(name)', () => {
+  describe('.triggerChange(name)', () => {
     it('triggers subscription callback', () => {
       const subscribeSpy = sinon.spy();
       const state = new State({});
@@ -313,4 +313,124 @@ describe('.triggerChange(name)', () => {
       expect(subscribeSpy).to.have.been.calledOnce;
     });
   });
+
+  describe('.setOptions(name)', () => {
+    it('sets then gets defaultValue', () => {
+      const subscribeSpy = sinon.spy();
+      const state = new State({});
+
+      state.setOptions('a', { defaultValue: 1 });
+
+      expect(state.getDefaultValue('a')).to.equal(1);
+    });
+
+    it('sets then gets defaultValue by group', () => {
+      const subscribeSpy = sinon.spy();
+      const state = new State({});
+
+      state.setOptions('a', { defaultValue: 2 });
+      state.setOptions('a.b', { defaultValue: 1 });
+
+      expect(state.getDefaultValue('a.b')).to.equal(1);
+    });
+
+    it('sets then gets defaultValue of group', () => {
+      const subscribeSpy = sinon.spy();
+      const state = new State({});
+
+      state.setOptions('a', { defaultValue: 1 });
+
+      expect(state.getDefaultValue('a.b')).to.equal(1);
+    });
+
+    context('format', () => {
+      it('number', () => {
+        const subscribeSpy = sinon.spy();
+        const state = new State({});
+
+        state.setOptions('a', { type: 'number' });
+        state.set('a', '1');
+
+        expect(state.get('a')).to.equal(1);
+      });
+
+      it('integer', () => {
+        const subscribeSpy = sinon.spy();
+        const state = new State({});
+
+        state.setOptions('a', { type: 'integer' });
+        state.set('a', '1.2');
+
+        expect(state.get('a')).to.equal(1);
+      });
+
+      it('float', () => {
+        const subscribeSpy = sinon.spy();
+        const state = new State({});
+
+        state.setOptions('a', { type: 'float' });
+        state.set('a', '1.2');
+
+        expect(state.get('a')).to.equal(1.2);
+      });
+
+      it('boolean', () => {
+        const subscribeSpy = sinon.spy();
+        const state = new State({});
+
+        state.setOptions('a', { type: 'boolean' });
+        state.set('a', 'false');
+
+        expect(state.get('a')).to.equal(false);
+      });
+
+      it('json', () => {
+        const subscribeSpy = sinon.spy();
+        const state = new State({});
+
+        state.setOptions('a', { type: 'json' });
+        state.set('a', '{ "b": "2" }');
+
+        expect(state.get('a')).to.deep.equal({ b: '2' });
+      });
+
+      it('wrong json not throws error', () => {
+        const subscribeSpy = sinon.spy();
+        const state = new State({});
+
+        state.setOptions('a', { type: 'json' });
+
+        expect(() => state.set('a', '{ b: "2" }')).to.not.throw();
+      });
+
+      it('custom', () => {
+        const subscribeSpy = sinon.spy();
+        const state = new State({});
+
+        state.setOptions('a', {
+          type: 'custom',
+          transformFunction: value => value + 1
+        });
+        state.set('a', 1);
+
+        expect(state.get('a')).to.equal(2);
+      });
+    });
+
+    it('sets allowedValues', () => {
+      const subscribeSpy = sinon.spy();
+      const state = new State({});
+
+      state.setOptions('a', { allowedValues: ['lorem', 'ipsum'] });
+      state.set('a', 'dolor');
+
+      expect(state.get('a')).to.equal(null);
+
+      state.set('a', 'ipsum');
+
+      expect(state.get('a')).to.equal('ipsum');
+    });
+
+  });
+
 });

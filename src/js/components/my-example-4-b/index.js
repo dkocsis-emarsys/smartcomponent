@@ -12,20 +12,20 @@ export default class MyExample4B extends SmartComponent {
     });
   }
 
-  static get observedAttributes() {
-    return ['value'];
-  }
-
-  static get stateAttributes() {
-    return ['value'];
-  }
-
-  static get validationRules() {
+  static get stateOptions() {
     return {
       value: {
         defaultValue: Math.random()
       }
     };
+  }
+
+  static get observedAttributes() {
+    return ['value'];
+  }
+
+  static get boundAttributesToState() {
+    return ['value'];
   }
 
   static get template() {

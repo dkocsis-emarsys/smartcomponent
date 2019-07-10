@@ -13,21 +13,11 @@ export default class MyExample1 extends SmartComponent {
     return ['value'];
   }
 
-  static get stateAttributes() {
+  static get boundAttributesToState() {
     return ['value'];
   }
 
-  static get validationRules() {
-    return {
-      value: {
-        type: 'number',
-        allowedValues: [-1, 0, 1],
-        defaultValue: 0
-      }
-    };
-  }
-
   static get template() {
-    return component => `Value of the component is: <b>${component._state.get('value')}</b>`;
+    return component => `The value is: <b>${component._state.get('value')}</b>`;
   }
 }

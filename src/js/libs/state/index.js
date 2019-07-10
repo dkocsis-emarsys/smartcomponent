@@ -6,6 +6,7 @@ export default class State {
     this._data = deepMerge({}, this._defaultData);
     this._renderFunction = renderFunction;
     this._subscriptions = [];
+    this._options = {};
   }
 
   _get(name, data) {
@@ -17,6 +18,10 @@ export default class State {
   }
 
   set(name, value, options = {}) {
+    const stateOptions = this._getOptions(name);
+
+    value = this._transformValue(value, stateOptions);
+
     const modifiedData = name.split('.').reduceRight((previous, current) => ({ [current]: previous }), value);
 
     if (this._get(name, this._data) === this._get(name, modifiedData)) { return value; }
@@ -37,8 +42,16 @@ export default class State {
     return result;
   }
 
-  render() {
-    this._renderFunction();
+  setOptions(name, options) {
+    this._options[name] = options;
+  }
+
+  getDefaultValue(name) {
+    const options = this._getOptions(name);
+
+    if (!options) { return; }
+
+    return options.defaultValue;
   }
 
   subscribe(name, callback) {
@@ -63,6 +76,10 @@ export default class State {
 
   triggerChange(name) {
     this._triggerCallback(name);
+  }
+
+  render() {
+    this._renderFunction();
   }
 
   _hasSubArray(master, sub) {
@@ -94,7 +111,7 @@ export default class State {
     return Object.entries(data).reduce((list, [key, value]) => {
       const flattenedKey = `${prefix}${key}`;
 
-      if (typeof value === 'object' && value.constructor === Object) {
+      if (value && typeof value === 'object' && value.constructor === Object) {
         this._objectToDotNotation(value, `${flattenedKey}.`, list);
       } else {
         keys.push(flattenedKey);
@@ -102,5 +119,59 @@ export default class State {
 
       return list;
     }, keys);
+  }
+
+  _getOptions(name) {
+    const options = Object.keys(this._options).filter(optionName => {
+      return !name ||
+        !optionName ||
+        this._hasSubArray(name.split('.'), optionName.split('.'))
+    });
+
+    const optionsList = options.reduce((list, current) => {
+      list[current] = this._options[current];
+      return list;
+    }, {});
+
+    return this._findOptionsByName(name, optionsList);
+  }
+
+  _findOptionsByName(name, optionsList) {
+    let options = null;
+    const nameParts = name.split('.');
+
+    for (let index = 1; index <= nameParts.length; ++index) {
+      const partialName = nameParts.slice(0, index).join('.');
+      options = optionsList[partialName] || options;
+    }
+
+    return options;
+  }
+
+  _transformValue(value, rule = {}) {
+    if (!rule) { return value; }
+
+    switch (rule.type) {
+      case 'custom': value = rule.transformFunction(value); break;
+      case 'number': value = Number(value); break;
+      case 'integer': value = parseInt(value); break;
+      case 'float': value = parseFloat(value); break;
+      case 'boolean': value = this._convertAttributeToBoolean(value); break;
+      case 'json': {
+        if (typeof value !== 'string') { break; }
+
+        try { value = JSON.parse(value); } catch(error) {}
+      } break;
+    }
+
+    if (rule.allowedValues && rule.allowedValues.filter(allowedValue => value === allowedValue).length === 0) {
+      return rule.defualtValue || null;
+    }
+
+    return value;
+  }
+
+  _convertAttributeToBoolean(value) {
+    return value !== undefined && value !== null && value !== false && value !== 'false';
   }
 }

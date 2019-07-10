@@ -48,22 +48,27 @@ export default class SmartComponent extends HTMLElement {
       this._options.set(option, options[option]);
     });
 
-    if (this.constructor.stateAttributes) {
-      this.constructor.stateAttributes.forEach(attribute => {
-        const transformedName = attribute.replace(/-([a-z])/g, g => g[1].toUpperCase());
+    if (this.constructor.stateOptions) {
+      Object.keys(this.constructor.stateOptions).forEach(name => {
+        this._state.setOptions(name, this.constructor.stateOptions[name]);
+      });
+    }
 
-        const validationRules = this.constructor.validationRules;
-        const validationRule = validationRules ? validationRules[transformedName] : false;
+    if (this.constructor.boundAttributesToState) {
+      this.constructor.boundAttributesToState.forEach(attribute => {
+        const attributeName = attribute.name || attribute;
+        const attributeOptions = attribute.options || {};
+
+        const transformedName = attributeName.replace(/-([a-z])/g, g => g[1].toUpperCase());
+        const stateName = attribute.as || transformedName;
 
         Object.defineProperty(this, transformedName, {
-          get() { this._state.get(transformedName); },
-          set(value) { this._state.set(transformedName, this.__transformValue(value, validationRule)); },
+          get() { this._state.get(stateName); },
+          set(value) { this._state.set(stateName, value, attributeOptions); },
           configurable: true
         });
 
-        if (validationRule && validationRule.hasOwnProperty('defaultValue')) {
-          this[transformedName] = validationRule.defaultValue;
-        }
+        this._state.set(stateName, this._state.getDefaultValue(stateName));
       });
     }
   }
@@ -136,10 +141,6 @@ export default class SmartComponent extends HTMLElement {
     });
   }
 
-  _convertAttributeToBoolean(value) {
-    return value !== undefined && value !== null && value !== false && value !== 'false';
-  }
-
   _parseHTML(content) {
     const parser = new DOMParser();
     return parser.parseFromString(content, 'text/html').body.childNodes[0];
@@ -147,30 +148,6 @@ export default class SmartComponent extends HTMLElement {
 
   _dispatchEvent(eventName, detail = {}, bubbles = true) {
     this.dispatchEvent(new CustomEvent(eventName, { detail, bubbles }));
-  }
-
-  __transformValue(value, rule) {
-    switch (rule.type) {
-      case 'number': value = Number(value); break;
-      case 'integer': value = parseInt(value); break;
-      case 'float': value = parseFloat(value); break;
-      case 'boolean': value = this._convertAttributeToBoolean(value); break;
-      case 'json': {
-        if (typeof value !== 'string') { break; }
-
-        try {
-          value = JSON.parse(value);
-        } catch(error) {
-          throw 'Value is not a valid JSON string!';
-        }
-      } break;
-    }
-
-    if (rule.allowedValues && rule.allowedValues.filter(allowedValue => value === allowedValue).length === 0) {
-      throw `Value (${value}) is not in the allowedValues list (${rule.allowedValues})!`;
-    }
-
-    return value;
   }
 
   __notifyParent(value) {
