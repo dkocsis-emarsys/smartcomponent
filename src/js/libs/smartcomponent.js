@@ -71,6 +71,16 @@ export default class SmartComponent extends HTMLElement {
         this._state.set(stateName, this._state.getDefaultValue(stateName));
       });
     }
+
+    if (this.constructor.eventHandlers) {
+      Object.keys(this.constructor.eventHandlers).forEach(handlerKey => {
+        const [handlerName, handlerEventType] = handlerKey.split(':');
+
+        if (handlerName !== '') { return; }
+
+        this.addEventListener(handlerEventType, this);
+      });
+    }
   }
 
   connectedCallback() {
@@ -137,7 +147,7 @@ export default class SmartComponent extends HTMLElement {
     Object.keys(this.constructor.eventHandlers).forEach(handlerKey => {
       const [handlerName, handlerEventType] = handlerKey.split(':');
 
-      if (event.type === handlerEventType && event.currentTarget.getAttribute('data-handler') === handlerName) {
+      if (event.type === handlerEventType && (handlerName === '' || event.currentTarget.getAttribute('data-handler') === handlerName)) {
         const handlerFunction = this[this.constructor.eventHandlers[handlerKey]].bind(this);
 
         if (!handlerFunction) { return; }
