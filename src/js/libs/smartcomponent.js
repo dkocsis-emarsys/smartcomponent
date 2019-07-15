@@ -142,7 +142,7 @@ export default class SmartComponent extends HTMLElement {
   childrenChangedCallback() {}
 
   handleEvent(event) {
-    if (!this.constructor.eventHandlers) { return; }
+    if (!this.constructor.eventHandlers || !this.__connected) { return; }
 
     Object.keys(this.constructor.eventHandlers).forEach(handlerKey => {
       const [handlerName, handlerEventType] = handlerKey.split(':');
