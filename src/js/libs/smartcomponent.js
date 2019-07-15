@@ -20,6 +20,7 @@ export default class SmartComponent extends HTMLElement {
 
     this._options = new State({
       id: Symbol(),
+      className: false,
       listenChildren: false,
       notifyParent: false,
       watchContent: false,
@@ -74,6 +75,12 @@ export default class SmartComponent extends HTMLElement {
 
   connectedCallback() {
     this.__connected = true;
+
+    const className = this._options.get('className');
+
+    if (className) {
+      className.split(' ').forEach(name => this.classList.add(name));
+    }
 
     const renderContainer = this._options.get('render.container');
 
