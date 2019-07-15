@@ -161,9 +161,7 @@ export default class SmartComponent extends HTMLElement {
     const renderContainer = this._options.get('render.container');
     const renderTemplate = this.constructor.template(this);
 
-    render(renderContainer, () => {
-      return typeof renderTemplate === 'string' ? html`${{ html: renderTemplate }}` : renderTemplate();
-    });
+    render(renderContainer, renderTemplate);
   }
 
   _parseHTML(content) {

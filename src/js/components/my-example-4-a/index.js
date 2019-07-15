@@ -1,4 +1,5 @@
 import SmartComponent from '../../libs/smartcomponent';
+import { html } from 'lighterhtml';
 
 export default class MyExample4A extends SmartComponent {
   init() {
@@ -31,7 +32,7 @@ export default class MyExample4A extends SmartComponent {
   }
 
   static get template() {
-    return component => `
+    return component => () => html`
       Global state value is: <b>${component._globalState.get(`${component._globalStatePrefix}.value`)}</b>
       |
       Local state value is: <b>${component._state.get('value')}</b>

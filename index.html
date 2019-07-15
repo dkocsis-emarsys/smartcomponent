@@ -39,7 +39,7 @@
         <li>State value transforming</li>
         <li>Auto-bind property to state</li>
         <li>Communication between parent and child components</li>
-        <li>Lighterhtml based or custom templating</li>
+        <li>Lighterhtml based templating</li>
         <li>Local and global state management</li>
         <li>Extra callbacks to never miss a moment</li>
         <li>And much more...</li>
@@ -95,7 +95,7 @@
           ...
 
           static get template() {
-            return component => `The value is: &lt;b&gt;${component._state.get('value')}&lt;/b&gt;`;
+            return component => () => html`The value is: &lt;b&gt;${component._state.get('value')}&lt;/b&gt;`;
           }
         </code></pre>
       </div>
@@ -120,6 +120,8 @@
       </div>
       <div class="s-docs__right">
         <pre><code class="language-javascript">
+          import { html } from 'lighterhtml';
+
           class MyExample1 extends SmartComponent {
             init() {
               super.init({
@@ -138,7 +140,7 @@
             }
 
             static get template() {
-              return component => `The value is: &lt;b&gt;${component._state.get('value')}&lt;/b&gt;`;
+              return component => () => html`The value is: &lt;b&gt;${component._state.get('value')}&lt;/b&gt;`;
             }
           }
         </code></pre>
@@ -219,6 +221,8 @@
       <div class="s-docs__right">
         <pre><code class="language-javascript">
           // Parent definition
+          import { html } from 'lighterhtml';
+
           class MyExample2 extends SmartComponent {
             init() {
               this._container = this._parseHTML(`&lt;div class="my-example-2-value"&gt;&lt;/div&gt;`);
@@ -232,7 +236,7 @@
             }
 
             static get template() {
-              return component => `Value of the child component is: &lt;b&gt;${component._state.get('childValue')}&lt;/b&gt;`;
+              return component => () => html`Value of the child component is: &lt;b&gt;${component._state.get('childValue')}&lt;/b&gt;`;
             }
 
             childrenChangedCallback(collection) {

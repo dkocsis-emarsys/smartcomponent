@@ -1,4 +1,5 @@
 import SmartComponent from '../../libs/smartcomponent';
+import { html } from 'lighterhtml';
 
 export default class MyExample3Child extends SmartComponent {
   init() {
@@ -27,6 +28,6 @@ export default class MyExample3Child extends SmartComponent {
   }
 
   static get template() {
-    return component => `Value of the parent is: <b>${component._state.get('group.value')}</b>`;
+    return component => () => html`Value of the parent is: <b>${component._state.get('group.value')}</b>`;
   }
 }
