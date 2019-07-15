@@ -28,7 +28,7 @@ export default class MyExample5 extends SmartComponent {
     return ['name', 'age'];
   }
 
-  static get boundAttributesToState() {
+  static get boundPropertiesToState() {
     return ['name'];
   }
 

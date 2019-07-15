@@ -18,7 +18,6 @@ export default class MyExample2 extends SmartComponent {
 
   childrenChangedCallback(collection) {
     const childrenList = collection.get();
-
     const items = childrenList.map(child => {
       this._state.set('childValue', child.state.value);
     });

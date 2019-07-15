@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <script src="/node_modules/mocha/mocha.js"></script>
+  <script src="/node_modules/chai/chai.js"></script>
+  <script src="/node_modules/@polymer/sinonjs/sinon.js"></script>
+  <script src="/node_modules/sinon-chai/lib/sinon-chai.js"></script>
+  <script src="/bundle.js"></script>
+
+  <link rel="stylesheet" href="/node_modules/mocha/mocha.css">
+</head>
+<body>
+  <div id="mocha"></div>
+
+  <script>
+    mocha.setup('bdd');
+    const expect = chai.expect;
+  </script>
+
+  <script src="./src/js/components/my-example-1/component-tests/index.spec.js"></script>
+  <script src="./src/js/components/my-example-2/component-tests/index.spec.js"></script>
+
+  <script>
+    mocha.checkLeaks();
+    mocha.run();
+  </script>
+</body>
+</html>

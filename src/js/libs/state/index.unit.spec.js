@@ -1,3 +1,5 @@
+global.EventTarget = () => {};
+
 import State from './index.js';
 
 describe('State', () => {
@@ -214,10 +216,14 @@ describe('State', () => {
 
       state.subscribe('a', subscribeSpy);
       state.set('a', {});
+
+      expect(subscribeSpy).to.have.been.calledOnce;
+      expect(subscribeSpy.getCall(0)).to.have.been.calledWith({}, 'a');
+
       state.set('a.b', 2);
 
       expect(subscribeSpy).to.have.been.calledTwice;
-      expect(subscribeSpy).to.have.been.calledWith({}, 'a');
+      expect(subscribeSpy.getCall(1)).to.have.been.calledWith({b: 2}, 'a');
     });
 
    it('calls callback function with deep value for any changes', () => {

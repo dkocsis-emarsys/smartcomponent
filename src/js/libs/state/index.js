@@ -89,8 +89,7 @@ export default class State {
   _triggerCallback(name, modifiedData) {
     if (!this._subscriptions) { return; }
 
-    const modifiedKeys = typeof modifiedData === 'object' && modifiedData.constructor === Object ?
-      this._objectToDotNotation(modifiedData) : [];
+    const modifiedKeys = typeof modifiedData === 'object' && modifiedData.constructor === Object ? this._objectToDotNotation(modifiedData) : [];
 
     this._subscriptions.forEach(subscription => {
       if (!name || !subscription.name || this._hasSubArray(name.split('.'), subscription.name.split('.')) || modifiedKeys.indexOf(subscription.name) !== -1) {

@@ -67,11 +67,11 @@
 
     <div class="s-docs__block">
       <div class="s-docs__left">
-        <p class="s-docs__text">Every component has built in state management and you can easily make a connection between properties and state by defining <b>boundAttributesToState</b> getter.</p>
+        <p class="s-docs__text">Every component has built in state management and you can easily make a connection between properties and state by defining <b>boundPropertiesToState</b> getter.</p>
       </div>
       <div class="s-docs__right">
         <pre><code class="language-javascript">
-          static get boundAttributesToState() {
+          static get boundPropertiesToState() {
             return ['value'];
           }
         </code></pre>
@@ -133,7 +133,7 @@
               return ['value'];
             }
 
-            static get boundAttributesToState() {
+            static get boundPropertiesToState() {
               return ['value'];
             }
 
@@ -258,7 +258,7 @@
               return ['value'];
             }
 
-            static get boundAttributesToState() {
+            static get boundPropertiesToState() {
               return ['value'];
             }
           }
@@ -269,11 +269,11 @@
 
     <div class="s-docs__block">
       <div class="s-docs__left">
-        <p class="s-docs__text">If you don't want to notify the parent on every state change you can define it in the <b>boundAttributesToState</b>. It's useful when the parent sets this value on the component, so it won't report back the change.</p>
+        <p class="s-docs__text">If you don't want to notify the parent on every state change you can define it in the <b>boundPropertiesToState</b>. It's useful when the parent sets this value on the component, so it won't report back the change.</p>
       </div>
       <div class="s-docs__right">
         <pre><code class="language-javascript">
-          static get boundAttributesToState() {
+          static get boundPropertiesToState() {
             return [
               {
                 name: 'value',
@@ -289,11 +289,11 @@
 
     <div class="s-docs__block">
       <div class="s-docs__left">
-        <p class="s-docs__text">Another interesting option in the <b>boundAttributesToState</b> is that you can tell the component to store the value with a different name in state.</p>
+        <p class="s-docs__text">Another interesting option in the <b>boundPropertiesToState</b> is that you can tell the component to store the value with a different name in state.</p>
       </div>
       <div class="s-docs__right">
         <pre><code class="language-javascript">
-          static get boundAttributesToState() {
+          static get boundPropertiesToState() {
             return [
               {
                 name: 'value',

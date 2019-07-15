@@ -26,7 +26,7 @@ export default class MyExample4A extends SmartComponent {
     return ['global', 'value'];
   }
 
-  static get boundAttributesToState() {
+  static get boundPropertiesToState() {
     return ['value'];
   }
 
