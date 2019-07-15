@@ -1,4 +1,4 @@
-import deepMerge from '../deep-merge';
+import deepMerge from './deep-merge';
 
 export default class State {
   constructor(defaultData = {}, renderFunction = () => {}) {
