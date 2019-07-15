@@ -103,6 +103,35 @@
 
     <div class="s-docs__block">
       <div class="s-docs__left">
+        <p class="s-docs__text">By default the container is appended to the component. It can be changed to <b>prepend</b> instead.</p>
+      </div>
+      <div class="s-docs__right">
+        <pre><code class="language-javascript">
+          super.init({
+            render: {
+              container: this,
+              prepend: true
+            }
+          });
+        </code></pre>
+      </div>
+    </div>
+
+    <div class="s-docs__block">
+      <div class="s-docs__left">
+        <p class="s-docs__text">The component can add classes to itself with the <b>className</b> option. The parameter is a string and multiple classes can be append with a space between classes.</p>
+      </div>
+      <div class="s-docs__right">
+        <pre><code class="language-javascript">
+          super.init({
+            className: 'my-example-1 my-example-1--dark'
+          });
+        </code></pre>
+      </div>
+    </div>
+
+    <div class="s-docs__block">
+      <div class="s-docs__left">
         <div class="s-example">
           <h3>Test the final component</h3>
 
@@ -195,6 +224,17 @@
               this._state.set('childValue', child.state.value);
             });
           }
+        </code></pre>
+      </div>
+    </div>
+
+    <div class="s-docs__block">
+      <div class="s-docs__left">
+        <p class="s-docs__text">A parent can have multiple different kind of children, and because of that the collection can give back them separately, if you want. Only thing you have to do is defining a first parameter with a tag name.</p>
+      </div>
+      <div class="s-docs__right">
+        <pre><code class="language-javascript">
+          const childrenList = collection.get('my-example-2-child');
         </code></pre>
       </div>
     </div>
