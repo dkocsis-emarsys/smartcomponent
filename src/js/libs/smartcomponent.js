@@ -147,7 +147,7 @@ export default class SmartComponent extends HTMLElement {
     Object.keys(this.constructor.eventHandlers).forEach(handlerKey => {
       const [handlerName, handlerEventType] = handlerKey.split(':');
 
-      if (event.type === handlerEventType && (handlerName === '' || event.currentTarget.getAttribute('data-handler') === handlerName)) {
+      if (event.type === handlerEventType && (handlerName === '' || event.target.getAttribute('data-handler') === handlerName)) {
         const handlerFunction = this[this.constructor.eventHandlers[handlerKey]].bind(this);
 
         if (!handlerFunction) { return; }
@@ -212,14 +212,14 @@ export default class SmartComponent extends HTMLElement {
     event.currentTarget.addEventListener('_child.disconnected', this.__childDisconnectedCallback, true);
 
     const childrenCollection = this._options.get('connectedChildren');
-    childrenCollection.upsert(event.detail.id, event.currentTarget, event.detail.state);
+    childrenCollection.upsert(event.detail.id, event.target, event.detail.state);
     this._options.triggerChange('connectedChildren');
   }
 
   __childChangedCallback(event) {
     event.stopPropagation();
     const childrenCollection = this._options.get('connectedChildren');
-    childrenCollection.upsert(event.detail.id, event.currentTarget, event.detail.state);
+    childrenCollection.upsert(event.detail.id, event.target, event.detail.state);
     this._options.triggerChange('connectedChildren');
   }
 
