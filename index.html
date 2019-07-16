@@ -230,7 +230,7 @@
 
     <div class="s-docs__block">
       <div class="s-docs__left">
-        <p class="s-docs__text">A parent can have multiple different kind of children, and because of that the collection can give back them separately, if you want. Only thing you have to do is defining a first parameter with a tag name.</p>
+        <p class="s-docs__text">A parent can have multiple different kind of children, and because of that the <b>collection</b> can give back them separately, if you want. Only thing you have to do is defining a <b>first parameter</b> with a tag name.</p>
       </div>
       <div class="s-docs__right">
         <pre><code class="language-javascript">
@@ -356,22 +356,19 @@
 
     <div class="s-docs__block">
       <div class="s-docs__left">
-        <p class="s-docs__text">Every component has it's own state and accesses the global state.</p>
+        <p class="s-docs__text">Every component has it's own <b>state</b>.</p>
       </div>
       <div class="s-docs__right">
         <pre><code class="language-javascript">
           this._state.set('value', 1);         // Sets value on local state
           this._state.get('value');            // Gets value from local state
-
-          this._globalState.set('value', 2);   // Sets value on global state
-          this._globalState.get('value');      // Gets value from global state
         </code></pre>
       </div>
     </div>
 
     <div class="s-docs__block">
       <div class="s-docs__left">
-        <p class="s-docs__text">You can pass options to the state on set.</p>
+        <p class="s-docs__text">You can pass <b>options to the state</b> on set.</p>
       </div>
       <div class="s-docs__right">
         <pre><code class="language-javascript">
@@ -385,19 +382,24 @@
 
     <div class="s-docs__block">
       <div class="s-docs__left">
-        <p class="s-docs__text">With the awesome subscription system, you will always know, what's happening.</p>
+        <p class="s-docs__text">With the awesome <b>subscription</b> system, you will always know, what's happening.</p>
       </div>
       <div class="s-docs__right">
         <pre><code class="language-javascript">
           this._state.subscribe('value', console.log);
           this._state.set('value', 1); // Logs '1, "value"'
+
+          // Defining multiple at once with an array
+          this._state.subscribe(['firstName', 'lastName'], console.log);
+          this._state.set('firstName', 1); // Logs '1, "value"'
+          this._state.set('lastName', 2); // Logs '2, lastName"'
         </code></pre>
       </div>
     </div>
 
     <div class="s-docs__block">
       <div class="s-docs__left">
-        <p class="s-docs__text">Every subscription comes with an unsubscribe.</p>
+        <p class="s-docs__text">Every subscription comes with an <b>unsubscribe</b> method.</p>
       </div>
       <div class="s-docs__right">
         <pre><code class="language-javascript">
@@ -411,7 +413,7 @@
 
     <div class="s-docs__block">
       <div class="s-docs__left">
-        <p class="s-docs__text">It has the ability to nest values.</p>
+        <p class="s-docs__text">It has the ability to <b>nest values</b>.</p>
       </div>
       <div class="s-docs__right">
         <pre><code class="language-javascript">
@@ -462,6 +464,54 @@
           ...
 
           this._state.getDefaultValue(); // Gets 1
+        </code></pre>
+      </div>
+    </div>
+
+    <div class="s-docs__block">
+      <div class="s-docs__left">
+        <p class="s-docs__text">State options can be defined through a static method too, called <b>stateOptions</b>.</p>
+      </div>
+      <div class="s-docs__right">
+        <pre><code class="language-javascript">
+          static get stateOptions() {
+            return {
+              value: {
+                defaultValue: 'Default Value'
+              }
+            };
+          }
+        </code></pre>
+      </div>
+    </div>
+
+    <div class="s-docs__block">
+      <div class="s-docs__left">
+        <p class="s-docs__text"><b>Global state</b> is available in every instance and work exactly like the default component state.</p>
+      </div>
+      <div class="s-docs__right">
+        <pre><code class="language-javascript">
+          this._globalState.set('value', 1);  // Sets 1
+          this._globalState.get('value');     // Gets 1
+        </code></pre>
+      </div>
+    </div>
+
+    <div class="s-docs__block">
+      <div class="s-docs__left">
+        <p class="s-docs__text"><b>Prefixed global state</b> is useful, if you want to render only when a subset of state changed.</p>
+      </div>
+      <div class="s-docs__right">
+        <pre><code class="language-javascript">
+            init() {
+              super.init({
+                globalState: 'subset' // or an array ['subset1, subset2']
+              });
+            }
+
+            ...
+
+            this._globalState.set('subset.value');  // Triggers rendering in all component uses this prefix
         </code></pre>
       </div>
     </div>

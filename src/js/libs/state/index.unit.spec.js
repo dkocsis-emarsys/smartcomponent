@@ -199,6 +199,22 @@ describe('State', () => {
       expect(subscribeSpy).to.have.been.calledWith(1, 'a');
     });
 
+    it('subscribes to an array', () => {
+      const subscribeSpy = sinon.spy();
+      const state = new State({});
+
+      state.subscribe(['a', 'b'], subscribeSpy);
+      state.set('a', 1);
+
+      expect(subscribeSpy).to.have.been.calledOnce;
+      expect(subscribeSpy).to.have.been.calledWith(1, 'a');
+
+      state.set('b', 2);
+
+      expect(subscribeSpy).to.have.been.calledTwice;
+      expect(subscribeSpy).to.have.been.calledWith(2, 'b');
+    });
+
     it('name contains "." calls callback function with value and name', () => {
       const subscribeSpy = sinon.spy();
       const state = new State({});
@@ -247,6 +263,20 @@ describe('State', () => {
       state.set('a', 2);
 
       expect(subscribeSpy).to.have.been.calledOnce;
+    });
+
+    it('does not trigger another call after unsubscribe if subscribed to array', () => {
+      const subscribeSpy = sinon.spy();
+      const state = new State({});
+
+      const subscription = state.subscribe(['a', 'b'], subscribeSpy);
+      state.set('a', 1);
+      state.set('b', 2);
+      subscription.unsubscribe();
+      state.set('a', 3);
+      state.set('b', 4);
+
+      expect(subscribeSpy).to.have.been.calledTwice;
     });
 
     it('triggering change manually calls callback function of unnamed subscriptions', () => {

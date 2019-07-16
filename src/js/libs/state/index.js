@@ -55,15 +55,19 @@ export default class State {
   }
 
   subscribe(name, callback) {
-    const subscription = {
-      id: Symbol(),
-      name,
-      callback
-    };
+    const id = Symbol();
 
-    this._subscriptions.push(subscription);
+    if (Array.isArray(name)) {
+      name.forEach(value => {
+        const subscription = { id, name: value, callback };
+        this._subscriptions.push(subscription);
+      });
+    } else {
+      const subscription = { id, name, callback };
+      this._subscriptions.push(subscription);
+    }
 
-    return { unsubscribe: this._unsubscribe.bind(subscription, this) };
+    return { unsubscribe: this._unsubscribe.bind(this, id) };
   }
 
   unsubscribeAll(name) {
@@ -98,10 +102,10 @@ export default class State {
     });
   }
 
-  _unsubscribe(store) {
-    store._subscriptions.forEach((subscription, index) => {
-      if (subscription.id === this.id) {
-        delete store._subscriptions[index];
+  _unsubscribe(id) {
+    this._subscriptions.forEach((subscription, index) => {
+      if (subscription.id === id) {
+        delete this._subscriptions[index];
       }
     });
   }
