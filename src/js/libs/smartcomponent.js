@@ -147,7 +147,7 @@ export default class SmartComponent extends HTMLElement {
     Object.keys(this.constructor.eventHandlers).forEach(handlerKey => {
       const [handlerName, handlerEventType] = handlerKey.split(':');
 
-      if (event.type === handlerEventType && (handlerName === '' || event.target.getAttribute('data-handler') === handlerName)) {
+      if (event.type === handlerEventType && (handlerName === '' || event.currentTarget.getAttribute('data-handler') === handlerName)) {
         const handlerFunction = this[this.constructor.eventHandlers[handlerKey]].bind(this);
 
         if (!handlerFunction) { return; }
