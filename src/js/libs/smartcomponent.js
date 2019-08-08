@@ -33,7 +33,7 @@ export default class SmartComponent extends HTMLElement {
       }
     }, this.renderCallback);
 
-    this._state = new State({}, this.renderCallback);
+    this._state = new State(this.constructor.defaultState || {}, this.renderCallback);
     this._globalState = globalState;
 
     this._options.subscribe('notifyParent', this.__notifyParent.bind(this));
