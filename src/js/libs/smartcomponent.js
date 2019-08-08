@@ -95,14 +95,20 @@ export default class SmartComponent extends HTMLElement {
     const renderContainer = this._options.get('render.container');
 
     if (renderContainer) {
+      this._cleanUpContainer();
+
       const renderAutoAppendContiner = this._options.get('render.autoAppendContainer');
       const renderPrepend = this._options.get('render.prepend');
 
-      if (renderAutoAppendContiner && renderContainer !== this) {
-        if (renderPrepend) {
-          this.insertAdjacentElement('afterbegin', renderContainer);
-        } else {
-          this.appendChild(renderContainer);
+      if (renderContainer !== this) {
+        renderContainer.setAttribute('data-render-container', '');
+
+        if (renderAutoAppendContiner) {
+          if (renderPrepend) {
+            this.insertAdjacentElement('afterbegin', renderContainer);
+          } else {
+            this.appendChild(renderContainer);
+          }
         }
       }
 
@@ -155,6 +161,10 @@ export default class SmartComponent extends HTMLElement {
         handlerFunction(event);
       }
     });
+  }
+
+  _cleanUpContainer() {
+    Array.from(this.querySelectorAll('[data-render-container]')).forEach(node => this.removeChild(node));
   }
 
   _render() {
