@@ -2,14 +2,6 @@ import SmartComponent from '../../libs/smartcomponent';
 import { html } from 'lighterhtml';
 
 export default class MyExample1 extends SmartComponent {
-  init() {
-    super.init({
-      render: {
-        container: this
-      }
-    });
-  }
-
   static get observedAttributes() {
     return ['value'];
   }

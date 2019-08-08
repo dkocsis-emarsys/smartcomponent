@@ -84,16 +84,6 @@
       </div>
       <div class="s-docs__right">
         <pre><code class="language-javascript">
-          init() {
-            super.init({
-              render: {
-                container: this
-              }
-            });
-          }
-
-          ...
-
           static get template() {
             return component => () => html`The value is: &lt;b&gt;${component._state.get('value')}&lt;/b&gt;`;
           }
@@ -109,7 +99,6 @@
         <pre><code class="language-javascript">
           super.init({
             render: {
-              container: this,
               prepend: true
             }
           });
@@ -152,14 +141,6 @@
           import { html } from 'lighterhtml';
 
           class MyExample1 extends SmartComponent {
-            init() {
-              super.init({
-                render: {
-                  container: this
-                }
-              });
-            }
-
             static get observedAttributes() {
               return ['value'];
             }

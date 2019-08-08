@@ -26,7 +26,7 @@ export default class SmartComponent extends HTMLElement {
       watchContent: false,
       connectedChildren: new NodeCollection(),
       render: {
-        container: null,
+        container: this.constructor.template ? this : null,
         globalState: false,
         autoAppendContainer: true,
         prepend: false
