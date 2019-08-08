@@ -51,8 +51,8 @@ export default class SmartComponent extends HTMLElement {
     });
 
     if (this.constructor.stateOptions) {
-      Object.keys(this.constructor.stateOptions).forEach(name => {
-        this._state.setOptions(name, this.constructor.stateOptions[name]);
+      Object.keys(this.constructor.stateOptions).forEach(option => {
+        this._state.setOptions(option, this.constructor.stateOptions[option]);
       });
     }
 
