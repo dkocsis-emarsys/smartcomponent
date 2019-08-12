@@ -1,5 +1,4 @@
 import SmartComponent from '../../libs/smartcomponent';
-import { html } from 'lighterhtml';
 
 export default class MyExample1 extends SmartComponent {
   static get observedAttributes() {
@@ -11,6 +10,6 @@ export default class MyExample1 extends SmartComponent {
   }
 
   static get template() {
-    return component => html`The value is: <b>${component._state.get('value')}</b>`;
+    return (html, component) => html`The value is: <b>${component._state.get('value')}</b>`;
   }
 }

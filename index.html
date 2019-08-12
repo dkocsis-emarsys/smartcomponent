@@ -136,8 +136,6 @@
       </div>
       <div class="s-docs__right">
         <pre><code class="language-javascript">
-          import { html } from 'lighterhtml';
-
           class MyExample1 extends SmartComponent {
             static get observedAttributes() {
               return ['value'];
@@ -148,7 +146,7 @@
             }
 
             static get template() {
-              return component => html`The value is: &lt;b&gt;${component._state.get('value')}&lt;/b&gt;`;
+              return (html, component) => html`The value is: &lt;b&gt;${component._state.get('value')}&lt;/b&gt;`;
             }
           }
         </code></pre>
@@ -236,8 +234,6 @@
       <div class="s-docs__right">
         <pre><code class="language-javascript">
           // Parent definition
-          import { html } from 'lighterhtml';
-
           class MyExample2 extends SmartComponent {
             init() {
               this._container = this._parseHTML(`&lt;div class="my-example-2-value"&gt;&lt;/div&gt;`);
@@ -251,7 +247,7 @@
             }
 
             static get template() {
-              return component => html`Value of the child component is: &lt;b&gt;${component._state.get('childValue')}&lt;/b&gt;`;
+              return (html, component) => html`Value of the child component is: &lt;b&gt;${component._state.get('childValue')}&lt;/b&gt;`;
             }
 
             childrenChangedCallback(collection) {
