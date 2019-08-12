@@ -12,35 +12,35 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@babel/core": "7.5.4",
-    "@babel/node": "7.5.0",
-    "@babel/preset-env": "7.5.4",
+    "@babel/core": "7.5.5",
+    "@babel/node": "7.5.5",
+    "@babel/preset-env": "7.5.5",
     "autoprefixer": "9.6.1",
     "babel-loader": "8.0.6",
     "browserslist": "4.6.6",
     "chai": "4.2.0",
     "clean-webpack-plugin": "3.0.0",
-    "css-loader": "3.0.0",
+    "css-loader": "3.2.0",
     "css-mqpacker": "7.0.0",
-    "mini-css-extract-plugin": "0.7.0",
-    "mocha": "6.1.4",
+    "mini-css-extract-plugin": "0.8.0",
+    "mocha": "6.2.0",
     "node-sass": "4.12.0",
     "postcss-clean": "1.1.0",
     "postcss-loader": "3.0.0",
-    "sass-loader": "7.1.0",
-    "sinon": "7.3.2",
+    "sass-loader": "7.2.0",
+    "sinon": "7.4.1",
     "sinon-chai": "3.3.0",
-    "style-loader": "0.23.1",
+    "style-loader": "1.0.0",
     "wct-mocha": "1.0.1",
     "web-component-tester": "6.9.2",
-    "webpack": "4.35.3",
+    "webpack": "4.39.1",
     "webpack-cli": "3.3.6",
-    "webpack-dev-server": "3.7.2"
+    "webpack-dev-server": "3.8.0"
   },
   "dependencies": {
     "classlist-polyfill": "1.2.0",
     "custom-event": "1.0.1",
-    "document-register-element": "1.13.2",
-    "lighterhtml": "0.14.8"
+    "document-register-element": "1.14.1",
+    "lighterhtml": "0.16.2"
   }
 }
