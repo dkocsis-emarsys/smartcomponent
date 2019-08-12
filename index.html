@@ -85,7 +85,7 @@
       <div class="s-docs__right">
         <pre><code class="language-javascript">
           static get template() {
-            return component => () => html`The value is: &lt;b&gt;${component._state.get('value')}&lt;/b&gt;`;
+            return component => html`The value is: &lt;b&gt;${component._state.get('value')}&lt;/b&gt;`;
           }
         </code></pre>
       </div>
@@ -148,7 +148,7 @@
             }
 
             static get template() {
-              return component => () => html`The value is: &lt;b&gt;${component._state.get('value')}&lt;/b&gt;`;
+              return component => html`The value is: &lt;b&gt;${component._state.get('value')}&lt;/b&gt;`;
             }
           }
         </code></pre>
@@ -251,7 +251,7 @@
             }
 
             static get template() {
-              return component => () => html`Value of the child component is: &lt;b&gt;${component._state.get('childValue')}&lt;/b&gt;`;
+              return component => html`Value of the child component is: &lt;b&gt;${component._state.get('childValue')}&lt;/b&gt;`;
             }
 
             childrenChangedCallback(collection) {
@@ -327,6 +327,88 @@
   </div>
 
   <div class="s-docs">
+    <h3 class="s-docs__title">Event handling</h3>
+
+    <div class="s-docs__block">
+      <div class="s-docs__left">
+        <p class="s-docs__text">Event handling is always something, what causing problems and makes our code much complex. With smart-component, this problem becomes much less painful. You can define an <b>eventHandlers</b> getter.</p>
+      </div>
+      <div class="s-docs__right">
+        <pre><code class="language-javascript">
+          static get eventHandlers() {
+            return {
+              ':click': '_onClick'
+            }
+          }
+
+          _onClick(event) {
+            // Do something here...
+          }
+        </code></pre>
+      </div>
+    </div>
+
+    <div class="s-docs__block">
+      <div class="s-docs__left">
+        <div class="s-example">
+          <h3>Test the final component</h3>
+
+          <div>
+            <my-example-3></my-example-3>
+          </div>
+        </div>
+      </div>
+      <div class="s-docs__right">
+        <pre><code class="language-javascript">
+          import SmartComponent from '../../libs/smartcomponent';
+
+          export default class MyExample3 extends SmartComponent {
+            static get defaultState() {
+              return { clicks: 0 };
+            }
+
+            static get eventHandlers() {
+              return { ':click': '_onClick' }
+            }
+
+            static get template() {
+              return component => html`<button>Clicked <b>${component._state.get('clicks')}</b> times.</button>`
+            }
+
+            _onClick() {
+              this._state.set('clicks', value => ++value);
+            }
+          }
+        </code></pre>
+      </div>
+    </div>
+
+    <div class="s-docs__block">
+      <div class="s-docs__left">
+        <p class="s-docs__text">Event handlers can be created through templates too using <b>data-handler</b> attribute and the event binding to the context.</p>
+      </div>
+      <div class="s-docs__right">
+        <pre><code class="language-javascript">
+          static get eventHandlers() {
+            return {
+              'button:click': '_onButtonClick'
+            }
+          }
+
+          static get template() {
+            return component => html`&lt;button data-handler="button" onclick="${component}" &gt;Click Me!&lt;/button&gt;`;
+          }
+
+          _onButtonClick(event) {
+            // Do something here...
+          }
+        </code></pre>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="s-docs">
     <h3 class="s-docs__title">State mangement</h3>
 
     <div class="s-docs__block">
@@ -351,6 +433,17 @@
             triggerCallback: false,     // Won't call the attached callbacks
             triggerRender: false        // Won't call render function
           });
+        </code></pre>
+      </div>
+    </div>
+
+    <div class="s-docs__block">
+      <div class="s-docs__left">
+        <p class="s-docs__text">A function can be also passed as value. Perfect for incrementing/decrementing values.</p>
+      </div>
+      <div class="s-docs__right">
+        <pre><code class="language-javascript">
+          this._state.set('value', value => value + 2);
         </code></pre>
       </div>
     </div>

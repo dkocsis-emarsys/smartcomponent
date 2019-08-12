@@ -1,5 +1,5 @@
 import CustomEvent from 'custom-event';
-import { html, render } from 'lighterhtml';
+import { render } from 'lighterhtml';
 import debounce from './debounce';
 import State from './state';
 import globalState from './global-state';
@@ -169,9 +169,9 @@ export default class SmartComponent extends HTMLElement {
 
   _render() {
     const renderContainer = this._options.get('render.container');
-    const renderTemplate = this.constructor.template(this);
+    const renderTemplate = this.constructor.template;
 
-    render(renderContainer, renderTemplate);
+    render(renderContainer, () => renderTemplate(this));
   }
 
   _parseHTML(content) {

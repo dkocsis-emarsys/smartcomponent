@@ -11,6 +11,6 @@ export default class MyExample1 extends SmartComponent {
   }
 
   static get template() {
-    return component => () => html`The value is: <b>${component._state.get('value')}</b>`;
+    return component => html`The value is: <b>${component._state.get('value')}</b>`;
   }
 }
