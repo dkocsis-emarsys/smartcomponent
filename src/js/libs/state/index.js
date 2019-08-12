@@ -20,6 +20,10 @@ export default class State {
   set(name, value, options = {}) {
     const stateOptions = this._getOptions(name);
 
+    if (typeof value === 'function') {
+      value = value(this._get(name, this._data));
+    }
+
     value = this._transformValue(value, stateOptions);
 
     const modifiedData = name.split('.').reduceRight((previous, current) => ({ [current]: previous }), value);
