@@ -5,7 +5,7 @@ export default class MyExample1 extends SmartComponent {
     return ['value'];
   }
 
-  static get boundPropertiesToState() {
+  static get boundProperties() {
     return ['value'];
   }
 

@@ -56,8 +56,8 @@ export default class SmartComponent extends HTMLElement {
       });
     }
 
-    if (this.constructor.boundPropertiesToState) {
-      this.constructor.boundPropertiesToState.forEach(property => {
+    if (this.constructor.boundProperties) {
+      this.constructor.boundProperties.forEach(property => {
         const propertyName = property.name || property;
         const propertyOptions = property.options || {};
         const stateName = property.as || propertyName;

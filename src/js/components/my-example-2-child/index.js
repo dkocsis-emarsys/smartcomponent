@@ -9,7 +9,7 @@ export default class MyExample2Child extends SmartComponent {
     return ['value'];
   }
 
-  static get boundPropertiesToState() {
+  static get boundProperties() {
     return ['value'];
   }
 }
