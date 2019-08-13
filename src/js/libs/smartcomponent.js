@@ -63,12 +63,16 @@ export default class SmartComponent extends HTMLElement {
         const stateName = property.as || propertyName;
 
         Object.defineProperty(this, propertyName, {
-          get() { this._state.get(stateName); },
+          get() { return this._state.get(stateName); },
           set(value) { this._state.set(stateName, value, propertyOptions); },
           configurable: true
         });
 
-        this._state.set(stateName, this._state.getDefaultValue(stateName));
+        const defaultValue = this._state.getDefaultValue(stateName);
+
+        if (defaultValue !== undefined) {
+          this._state.set(stateName, defaultValue);
+        }
       });
     }
 
