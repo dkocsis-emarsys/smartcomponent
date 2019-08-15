@@ -99,7 +99,7 @@ export default class SmartComponent extends HTMLElement {
     const renderContainer = this._options.get('render.container');
 
     if (renderContainer) {
-      this._cleanUpContainer();
+      this.__cleanUpContainer();
 
       const renderAutoAppendContiner = this._options.get('render.autoAppendContainer');
       const renderPrepend = this._options.get('render.prepend');
@@ -167,8 +167,8 @@ export default class SmartComponent extends HTMLElement {
     });
   }
 
-  _cleanUpContainer() {
-    Array.from(this.querySelectorAll('[data-render-container]')).forEach(node => this.removeChild(node));
+  static _parseHTML(content) {
+    return new DOMParser().parseFromString(content, 'text/html').body.childNodes[0];
   }
 
   _render() {
@@ -178,13 +178,12 @@ export default class SmartComponent extends HTMLElement {
     render(renderContainer, () => renderTemplate(html, this));
   }
 
-  _parseHTML(content) {
-    const parser = new DOMParser();
-    return parser.parseFromString(content, 'text/html').body.childNodes[0];
-  }
-
   _dispatchEvent(eventName, detail = {}, bubbles = true) {
     this.dispatchEvent(new CustomEvent(eventName, { detail, bubbles }));
+  }
+
+  __cleanUpContainer() {
+    Array.from(this.querySelectorAll('[data-render-container]')).forEach(node => this.removeChild(node));
   }
 
   __notifyParent(value) {

@@ -236,7 +236,7 @@
           // Parent definition
           class MyExample2 extends SmartComponent {
             init() {
-              this._container = this._parseHTML(`&lt;div class="my-example-2-value"&gt;&lt;/div&gt;`);
+              this._container = this.constructor._parseHTML(`&lt;div class="my-example-2-value"&gt;&lt;/div&gt;`);
 
               super.init({
                 listenChildren: true,

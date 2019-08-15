@@ -2,7 +2,7 @@ import SmartComponent from '../../libs/smartcomponent';
 
 export default class MyExample2 extends SmartComponent {
   init() {
-    this._container = this._parseHTML(`<div class="my-example-2-value"></div>`);
+    this._container = this.constructor._parseHTML(`<div class="my-example-2-value"></div>`);
 
     super.init({
       listenChildren: true,
