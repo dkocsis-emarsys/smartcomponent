@@ -1,3 +1,9 @@
 import State from './state';
 
-export default new State();
+const state = new State();
+
+window.smartComponent = {
+  globalState: state
+};
+
+export default state;

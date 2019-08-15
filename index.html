@@ -85,7 +85,9 @@
       <div class="s-docs__right">
         <pre><code class="language-javascript">
           static get template() {
-            return component => html`The value is: &lt;b&gt;${component._state.get('value')}&lt;/b&gt;`;
+            return component => html`
+              The value is: &lt;b&gt;${component._state.get('value')}&lt;/b&gt;
+            `;
           }
         </code></pre>
       </div>
@@ -146,7 +148,9 @@
             }
 
             static get template() {
-              return (html, component) => html`The value is: &lt;b&gt;${component._state.get('value')}&lt;/b&gt;`;
+              return (html, component) => html`
+                The value is: &lt;b&gt;${component._state.get('value')}&lt;/b&gt;
+              `;
             }
           }
         </code></pre>
@@ -236,7 +240,9 @@
           // Parent definition
           class MyExample2 extends SmartComponent {
             init() {
-              this._container = this.constructor._parseHTML(`&lt;div class="my-example-2-value"&gt;&lt;/div&gt;`);
+              this._container = this.constructor._parseHTML(`
+                &lt;div class="my-example-2-value"&gt;&lt;/div&gt;
+              `);
 
               super.init({
                 listenChildren: true,
@@ -247,7 +253,10 @@
             }
 
             static get template() {
-              return (html, component) => html`Value of the child component is: &lt;b&gt;${component._state.get('childValue')}&lt;/b&gt;`;
+              return (html, component) => html`
+                Value of the child component is:
+                &lt;b&gt;${component._state.get('childValue')}&lt;/b&gt;
+              `;
             }
 
             childrenChangedCallback(collection) {
@@ -368,7 +377,9 @@
             }
 
             static get template() {
-              return component => html`<button>Clicked <b>${component._state.get('clicks')}</b> times.</button>`
+              return component => html`
+                <button>Clicked <b>${component._state.get('clicks')}</b> times.</button>
+              `;
             }
 
             _onClick() {
@@ -392,7 +403,9 @@
           }
 
           static get template() {
-            return component => html`&lt;button data-handler="button" onclick="${component}" &gt;Click Me!&lt;/button&gt;`;
+            return component => html`
+              &lt;button data-handler="button" onclick="${component}" &gt;Click Me!&lt;/button&gt;
+            `;
           }
 
           _onButtonClick(event) {
@@ -576,6 +589,18 @@
             ...
 
             this._globalState.set('subset.value');  // Triggers rendering in all component uses this prefix
+        </code></pre>
+      </div>
+    </div>
+
+    <div class="s-docs__block">
+      <div class="s-docs__left">
+        <p class="s-docs__text">Global state couldn't be true global, if you can't access it from anywhere. The whole object is available on the <b>window</b>.</p>
+      </div>
+      <div class="s-docs__right">
+        <pre><code class="language-javascript">
+            window.smartComponent.globalState.value = 5; // Calls rendering of course
+            window.smartComponent.globalState.value; // 5
         </code></pre>
       </div>
     </div>
