@@ -10,3 +10,10 @@ import MyExample3 from './components/my-example-3';
 defineElement(MyExample1);
 defineElement(MyExample2, [MyExample2Child]);
 defineElement(MyExample3);
+
+import SampleNumberInput from './components/sample-number-input';
+import SampleSelect from './components/sample-select';
+import SampleSelectOption from './components/sample-select-option';
+
+defineElement(SampleNumberInput);
+defineElement(SampleSelect, [SampleSelectOption]);

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>smart-component</title>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="./resources/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./resources/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./resources/favicon-16x16.png">
+  <link rel="manifest" href="./resources/site.webmanifest">
+
+  <link href="https://fonts.googleapis.com/css?family=Maven+Pro:400,700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <h2>Number input</h2>
+  <sample-number-input data-value="2" data-min="0" data-max="100" data-name="number"></sample-number-input>
+
+  <h2>Select</h2>
+  <style>
+    sample-select [data-handler="opener"] { width: 200px; border: 1px solid #ddd; padding: 4px; }
+    sample-select .bold { font-weight: bold; }
+    sample-select .popup { width: 200px; border: 1px solid #ddd; padding: 4px; }
+    sample-select [data-handler="option"] { padding: 4px; cursor: pointer; }
+    sample-select [data-handler="option"]:hover { background: #eee; }
+    sample-select-option { display: none; }
+  </style>
+  <sample-select data-name="select">
+    <sample-select-option data-value="1">Option #1</sample-select-option>
+    <sample-select-option data-value="2">Option #2</sample-select-option>
+    <sample-select-option data-value="3">Option #3</sample-select-option>
+    <sample-select-option data-value="4">Option #4</sample-select-option>
+  </sample-select>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=Symbol%2CArray.prototype.find"></script>
+  <script src="./bundle.js"></script>
+</body>
+</html>
