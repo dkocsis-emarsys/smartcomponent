@@ -4,7 +4,7 @@ export default class NodeCollection {
   }
 
   get(type = '') {
-    if (!type) { return this._items; }
+    if (!type) { return this._items.map(item => item); }
 
     return this._items.filter(item => item.element.nodeName === type.toUpperCase());
   }
