@@ -10,7 +10,7 @@ export default class MyExample3 extends SmartComponent {
   }
 
   static get template() {
-    return (html, component) => html`<button>Clicked <b>${component._state.get('clicks')}</b> times.</button>`
+    return (html, component) => html`<button>Clicked <b>${component._state.get('clicks')}</b> times.</button>`;
   }
 
   _onClick() {
