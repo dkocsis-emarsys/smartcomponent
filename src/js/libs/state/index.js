@@ -160,9 +160,18 @@ export default class State {
 
     switch (rule.type) {
       case 'custom': value = rule.transformFunction(value); break;
-      case 'number': value = Number(value); break;
-      case 'integer': value = parseInt(value); break;
-      case 'float': value = parseFloat(value); break;
+      case 'number': {
+        value = Number(value);
+        if (isNaN(value)) { value = 0; }
+      } break;
+      case 'integer': {
+        value = parseInt(value);
+        if (isNaN(value)) { value = 0; }
+      } break;
+      case 'float': {
+        value = parseFloat(value);
+        if (isNaN(value)) { value = 0; }
+      } break;
       case 'boolean': value = this._convertAttributeToBoolean(value); break;
       case 'json': {
         if (typeof value !== 'string') { break; }
@@ -172,7 +181,7 @@ export default class State {
     }
 
     if (rule.allowedValues && rule.allowedValues.filter(allowedValue => value === allowedValue).length === 0) {
-      return rule.defualtValue || null;
+      return rule.defaultValue !== undefined ? rule.defaultValue : null;
     }
 
     return value;
