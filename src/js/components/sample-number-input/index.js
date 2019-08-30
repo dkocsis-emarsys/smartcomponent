@@ -40,12 +40,12 @@ export default class SampleNumberInput extends SmartComponent {
     };
   }
 
-  static get template() {
-    return (html, component) => html`
-      <input type="hidden" name="${component._state.get('name')}" value="${component._state.get('value')}">
-      <button data-handler="decrease" onclick="${component}">-</button>
-      <input type="text" value="${component._state.get('value')}" data-handler="input" oninput="${component}">
-      <button data-handler="increase" onclick="${component}">+</button>
+  get template() {
+    return html => html`
+      <input type="hidden" name="${this._state.get('name')}" value="${this._state.get('value')}">
+      <button data-handler="decrease" onclick="${this}">-</button>
+      <input type="text" value="${this._state.get('value')}" data-handler="input" oninput="${this}">
+      <button data-handler="increase" onclick="${this}">+</button>
     `;
   }
 

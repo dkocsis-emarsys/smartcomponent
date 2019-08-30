@@ -84,7 +84,7 @@
       </div>
       <div class="s-docs__right">
         <pre><code class="language-javascript">
-          static get template() {
+          get template() {
             return component => html`
               The value is: &lt;b&gt;${component._state.get('value')}&lt;/b&gt;
             `;
@@ -147,11 +147,79 @@
               return ['value'];
             }
 
-            static get template() {
-              return (html, component) => html`
-                The value is: &lt;b&gt;${component._state.get('value')}&lt;/b&gt;
+            get template() {
+              return html => html`
+                The value is: &lt;b&gt;${this._state.get('value')}&lt;/b&gt;
               `;
             }
+          }
+        </code></pre>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="s-docs">
+    <h3 class="s-docs__title">Advanced templating</h3>
+
+    <div class="s-docs__block">
+      <div class="s-docs__left">
+        <p class="s-docs__text">As you could see above a <b>simple template</b> looks like this.</p>
+      </div>
+      <div class="s-docs__right">
+        <pre><code class="language-javascript">
+          get template() {
+            return html => html`&lt;div&gt;Hello World!&lt;/div&gt;`;
+          }
+        </code></pre>
+      </div>
+    </div>
+
+    <div class="s-docs__block">
+      <div class="s-docs__left">
+        <p class="s-docs__text"><b>Multiple templates</b> could be defined by using an object in the template getter. You can set various options here.</p>
+      </div>
+      <div class="s-docs__right">
+        <pre><code class="language-javascript">
+          get template() {
+            return [
+              {
+                name: 'hello',
+                markup: html => html`&lt;div&gt;Hello&lt;/div&gt;`,
+                container: this.constructor._parseHTML('&lt;div class="hello-container">&lt;/div&gt;'),
+                autoAppendContainer: true
+              },
+              {
+                name: 'world',
+                markup: html => html`&lt;div&gt;World!&lt;/div&gt;`,
+                container: this.constructor._parseHTML('&lt;div class="world-container">&lt;/div&gt;'),
+                autoAppendContainer: true
+              }
+            ];
+          }
+        </code></pre>
+      </div>
+    </div>
+
+    <div class="s-docs__block">
+      <div class="s-docs__left">
+        <p class="s-docs__text">Templates can easily connect to eachother using the <b>_templater</b>'s render method.</p>
+      </div>
+      <div class="s-docs__right">
+        <pre><code class="language-javascript">
+          get template() {
+            return [
+              {
+                name: 'hello',
+                markup: html => html`&lt;div&gt;Hello ${this._templater.render('world')}!&lt;/div&gt;`,
+                container: this.constructor._parseHTML('&lt;div class="hello-container"&gt;&lt;/div&gt;'),
+                autoAppendContainer: true
+              },
+              {
+                name: 'world',
+                markup: html => html`&lt;strong&gt;World&lt;/strong&gt;`
+              }
+            ];
           }
         </code></pre>
       </div>
@@ -252,10 +320,10 @@
               });
             }
 
-            static get template() {
-              return (html, component) => html`
+            get template() {
+              return html => html`
                 Value of the child component is:
-                &lt;b&gt;${component._state.get('childValue')}&lt;/b&gt;
+                &lt;b&gt;${this._state.get('childValue')}&lt;/b&gt;
               `;
             }
 
@@ -376,9 +444,9 @@
               return { ':click': '_onClick' }
             }
 
-            static get template() {
-              return component => html`
-                <button>Clicked <b>${component._state.get('clicks')}</b> times.</button>
+            get template() {
+              return html => html`
+                &lt;button&gt;Clicked &lt;b&gt;${this._state.get('clicks')}&lt;/b&gt; times.&lt;/button&gt;
               `;
             }
 
@@ -402,9 +470,9 @@
             }
           }
 
-          static get template() {
-            return component => html`
-              &lt;button data-handler="button" onclick="${component}" &gt;Click Me!&lt;/button&gt;
+          get template() {
+            return html => html`
+              &lt;button data-handler="button" onclick="${this}" &gt;Click Me!&lt;/button&gt;
             `;
           }
 
@@ -582,7 +650,7 @@
         <pre><code class="language-javascript">
             init() {
               super.init({
-                globalState: 'subset' // or an array ['subset1, subset2']
+                watchGlobalState: 'subset' // or an array ['subset1, subset2']
               });
             }
 

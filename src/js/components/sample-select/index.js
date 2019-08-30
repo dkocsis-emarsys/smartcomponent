@@ -3,12 +3,13 @@ import popupTemplate from './popup-template';
 
 export default class SampleSelect extends SmartComponent {
   init() {
-    this._container = this.constructor._parseHTML('<div class="container"></div>');
-    this._popupContainer = this.constructor._parseHTML('<div class="popup-container"></div>');
-    super.init({
-      listenChildren: true,
-      render: {
-        container: this._container
+    super.init({ listenChildren: true });
+
+    this._state.subscribe('isOpen', value => {
+      if (value) {
+        document.body.appendChild(this._templater.getContainer('popup'));
+      } else {
+        document.body.removeChild(this._templater.getContainer('popup'));
       }
     });
   }
@@ -37,12 +38,27 @@ export default class SampleSelect extends SmartComponent {
     };
   }
 
-  static get template() {
-    return (html, component) => html`
-      <input type="hidden" name="${component._state.get('name')}" value="${component._state.get('value')}">
-      <div data-handler="opener" onclick="${component}">${component._state.get('content') || 'Select an option'}</div>
-      ${component._state.get('isOpen') ? popupTemplate(html, component) : ''}
-    `;
+  get template() {
+    return [
+      {
+        name: 'select',
+        markup: html => html`
+          <input type="hidden" name="${this._state.get('name')}" value="${this._state.get('value')}">
+          <div data-handler="opener" onclick="${this}">${this._state.get('content') || 'Select an option'}</div>`,
+        container: this.constructor._parseHTML('<div class="container"></div>'),
+        autoAppendContainer: true
+      },
+      {
+        name: 'popup',
+        markup: popupTemplate,
+        container: this.constructor._parseHTML('<div class="popup-container"></div>')
+      }
+    ];
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this._state.set('isOpen', false);
   }
 
   childrenChangedCallback(collection) {

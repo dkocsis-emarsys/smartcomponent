@@ -70,6 +70,16 @@ describe('State', () => {
         expect(state.get('a')).to.equal(3);
       });
 
+      it('sets function as value', () => {
+        const state = new State();
+        const sampleFunction = value => ++value;
+
+        state.set('a', 2);
+        state.set('a', sampleFunction, { storeFunction: true });
+
+        expect(state.get('a')).to.equal(sampleFunction);
+      });
+
       it('sets deep data according to parameters', () => {
         const state = new State();
 

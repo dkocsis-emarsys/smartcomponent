@@ -1,9 +1,9 @@
 import CustomEvent from 'custom-event';
-import { html, render } from 'lighterhtml';
 import debounce from './debounce';
 import State from './state';
 import globalState from './global-state';
 import NodeCollection from './node-collection';
+import Templater from './templater';
 
 export default class SmartComponent extends HTMLElement {
   constructor(...$) { const _ = super(...$); _.init(); return _; }
@@ -18,19 +18,17 @@ export default class SmartComponent extends HTMLElement {
     this.childrenChangedCallback = debounce(this.childrenChangedCallback.bind(this));
     this.renderCallback = this.renderCallback.bind(this);
 
+    this._templater = new Templater(this);
+    this._templater.init(this.template);
+
     this._options = new State({
       id: Symbol(),
       className: false,
       listenChildren: false,
+      connectedChildren: new NodeCollection(),
       notifyParent: false,
       watchContent: false,
-      connectedChildren: new NodeCollection(),
-      render: {
-        container: this.constructor.template ? this : null,
-        globalState: false,
-        autoAppendContainer: true,
-        prepend: false
-      }
+      watchGlobalState: false
     }, this.renderCallback);
 
     this._state = new State(this.constructor.defaultState || {}, this.renderCallback);
@@ -39,12 +37,12 @@ export default class SmartComponent extends HTMLElement {
     this._options.subscribe('notifyParent', this.__notifyParent.bind(this));
     this._options.subscribe('listenChildren', this.__listenChildren.bind(this));
     this._options.subscribe('watchContent', this.__watchContent.bind(this));
-    this._options.subscribe('render.globalState', this.__renderGlobalState.bind(this));
+    this._options.subscribe('watchGlobalState', this.__watchGlobalState.bind(this));
 
     this.__mutationObserver = new MutationObserver(this.contentChangedCallback);
     this.__notifyParentSubscription = null;
     this.__listenChildrenSubscription = null;
-    this.__renderGlobalStateSubscription = null;
+    this.__watchGlobalStateSubscription = null;
 
     Object.keys(options).forEach(option => {
       this._options.set(option, options[option]);
@@ -56,35 +54,8 @@ export default class SmartComponent extends HTMLElement {
       });
     }
 
-    if (this.constructor.boundProperties) {
-      this.constructor.boundProperties.forEach(property => {
-        const propertyName = property.name || property;
-        const propertyOptions = property.options || {};
-        const stateName = property.as || propertyName;
-
-        Object.defineProperty(this, propertyName, {
-          get() { return this._state.get(stateName); },
-          set(value) { this._state.set(stateName, value, propertyOptions); },
-          configurable: true
-        });
-
-        const defaultValue = this._state.getDefaultValue(stateName);
-
-        if (defaultValue !== undefined) {
-          this._state.set(stateName, defaultValue);
-        }
-      });
-    }
-
-    if (this.constructor.eventHandlers) {
-      Object.keys(this.constructor.eventHandlers).forEach(handlerKey => {
-        const [handlerName, handlerEventType] = handlerKey.split(':');
-
-        if (handlerName !== '') { return; }
-
-        this.addEventListener(handlerEventType, this);
-      });
-    }
+    this.__boundProperties();
+    this.__eventHandlers();
   }
 
   connectedCallback() {
@@ -96,28 +67,9 @@ export default class SmartComponent extends HTMLElement {
       className.split(' ').forEach(name => this.classList.add(name));
     }
 
-    const renderContainer = this._options.get('render.container');
+    this._templater.connect();
 
-    if (renderContainer) {
-      this.__cleanUpContainer();
-
-      const renderAutoAppendContiner = this._options.get('render.autoAppendContainer');
-      const renderPrepend = this._options.get('render.prepend');
-
-      if (renderContainer !== this) {
-        renderContainer.setAttribute('data-render-container', '');
-
-        if (renderAutoAppendContiner) {
-          if (renderPrepend) {
-            this.insertAdjacentElement('afterbegin', renderContainer);
-          } else {
-            this.appendChild(renderContainer);
-          }
-        }
-      }
-
-      this.renderCallback();
-    }
+    this.renderCallback();
 
     this.__notifyParentEvent('_child.connected');
   }
@@ -125,11 +77,7 @@ export default class SmartComponent extends HTMLElement {
   disconnectedCallback() {
     this.__connected = false;
 
-    const renderContainer = this._options.get('render.container');
-
-    if (renderContainer && renderContainer !== this) {
-      renderContainer.parentNode.removeChild(renderContainer);
-    }
+    this._templater.disconnect();
 
     this.__notifyParentEvent('_child.disconnected');
   }
@@ -140,12 +88,7 @@ export default class SmartComponent extends HTMLElement {
   }
 
   renderCallback() {
-    const renderContainer = this._options.get('render.container');
-    const renderTemplate = this.constructor.template;
-
-    if (this.__connected && renderContainer && renderTemplate) {
-      this._render();
-    }
+    if (this.__connected) { this._templater.renderAll(); }
   }
 
   contentChangedCallback() {}
@@ -171,19 +114,42 @@ export default class SmartComponent extends HTMLElement {
     return new DOMParser().parseFromString(content, 'text/html').body.childNodes[0];
   }
 
-  _render() {
-    const renderContainer = this._options.get('render.container');
-    const renderTemplate = this.constructor.template;
-
-    render(renderContainer, () => renderTemplate(html, this));
-  }
-
   _dispatchEvent(eventName, detail = {}, bubbles = true) {
     this.dispatchEvent(new CustomEvent(eventName, { detail, bubbles }));
   }
 
-  __cleanUpContainer() {
-    Array.from(this.querySelectorAll('[data-render-container]')).forEach(node => this.removeChild(node));
+  __boundProperties() {
+    if (!this.constructor.boundProperties) { return; }
+
+    this.constructor.boundProperties.forEach(property => {
+      const propertyName = property.name || property;
+      const propertyOptions = property.options || {};
+      const stateName = property.as || propertyName;
+
+      Object.defineProperty(this, propertyName, {
+        get() { return this._state.get(stateName); },
+        set(value) { this._state.set(stateName, value, propertyOptions); },
+        configurable: true
+      });
+
+      const defaultValue = this._state.getDefaultValue(stateName);
+
+      if (defaultValue !== undefined) {
+        this._state.set(stateName, defaultValue);
+      }
+    });
+  }
+
+  __eventHandlers() {
+    if (!this.constructor.eventHandlers) { return; }
+
+    Object.keys(this.constructor.eventHandlers).forEach(handlerKey => {
+      const [handlerName, handlerEventType] = handlerKey.split(':');
+
+      if (handlerName !== '') { return; }
+
+      this.addEventListener(handlerEventType, this);
+    });
   }
 
   __notifyParent(value) {
@@ -256,14 +222,14 @@ export default class SmartComponent extends HTMLElement {
     }
   }
 
-  __renderGlobalState() {
-    const globalState = this._options.get('render.globalState');
+  __watchGlobalState() {
+    const globalState = this._options.get('watchGlobalState');
 
     if (globalState) {
       const globalStateKey = globalState === true ? '' : globalState;
-      this.__renderGlobalStateSubscription = this._globalState.subscribe(globalStateKey, this.renderCallback);
-    } else if (this.__renderGlobalStateSubscription) {
-      this.__renderGlobalStateSubscription.unsubscribe();
+      this.__watchGlobalStateSubscription = this._globalState.subscribe(globalStateKey, this.renderCallback);
+    } else if (this.__watchGlobalStateSubscription) {
+      this.__watchGlobalStateSubscription.unsubscribe();
     }
   }
 }

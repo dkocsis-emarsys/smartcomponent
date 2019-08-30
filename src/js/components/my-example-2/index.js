@@ -12,8 +12,8 @@ export default class MyExample2 extends SmartComponent {
     });
   }
 
-  static get template() {
-    return (html, component) => html`Value of the child component is: <b>${component._state.get('childValue')}</b>`;
+  get template() {
+    return html => html`Value of the child component is: <b>${this._state.get('childValue')}</b>`;
   }
 
   childrenChangedCallback(collection) {

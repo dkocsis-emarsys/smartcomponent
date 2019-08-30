@@ -9,8 +9,8 @@ export default class MyExample3 extends SmartComponent {
     return { ':click': '_onClick' }
   }
 
-  static get template() {
-    return (html, component) => html`<button>Clicked <b>${component._state.get('clicks')}</b> times.</button>`;
+  get template() {
+    return html => html`<button>Clicked <b>${this._state.get('clicks')}</b> times.</button>`;
   }
 
   _onClick() {
