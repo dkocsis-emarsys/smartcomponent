@@ -110,10 +110,6 @@ export default class SmartComponent extends HTMLElement {
     });
   }
 
-  static _parseHTML(content) {
-    return new DOMParser().parseFromString(content, 'text/html').body.childNodes[0];
-  }
-
   _dispatchEvent(eventName, detail = {}, bubbles = true) {
     this.dispatchEvent(new CustomEvent(eventName, { detail, bubbles }));
   }
