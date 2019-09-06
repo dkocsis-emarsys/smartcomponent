@@ -26,9 +26,7 @@ export default class SampleSelect extends SmartComponent {
   }
 
   static get boundProperties() {
-    return [
-      { name: 'dataName', as: 'name' }
-    ];
+    return [{ name: 'dataName', as: 'name' }];
   }
 
   static get eventHandlers() {
@@ -43,15 +41,17 @@ export default class SampleSelect extends SmartComponent {
       {
         name: 'select',
         markup: html => html`
-          <input type="hidden" name="${this._state.get('name')}" value="${this._state.get('value')}">
-          <div data-handler="opener" onclick="${this}">${this._state.get('content') || 'Select an option'}</div>`,
-        container: this.constructor._parseHTML('<div class="container"></div>'),
+          <input type="hidden" name="${this._state.get('name')}" value="${this._state.get('selectedOption.value')}">
+          <div data-handler="opener" onclick="${this}">
+            ${this._state.get('selectedOption.content') && this._state.get('selectedOption.content')() || 'Select an option'}
+          </div>`,
+        container: this._templater.parseHTML('<div class="container"></div>'),
         autoAppendContainer: true
       },
       {
         name: 'popup',
         markup: popupTemplate,
-        container: this.constructor._parseHTML('<div class="popup-container"></div>')
+        container: this._templater.parseHTML('<div class="popup-container"></div>')
       }
     ];
   }
@@ -71,8 +71,10 @@ export default class SampleSelect extends SmartComponent {
   }
 
   _onOptionClick(event) {
-    this._state.set('value', event.target.dataset.value);
-    this._state.set('content', event.target.dataset.content);
+    const option = this._state.get('options').find(option => option.state.value === event.currentTarget.dataset.value);
+
+    this._state.set('selectedOption.value', option.state.value);
+    this._state.set('selectedOption.content', option.state.content, { storeFunction: true });
     this._state.set('isOpen', false);
   }
 }

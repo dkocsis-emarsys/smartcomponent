@@ -34,9 +34,9 @@
   </style>
 </head>
 <body>
-  <h2>Number input</h2>
+<!--   <h2>Number input</h2>
   <sample-number-input data-value="2" data-min="0" data-max="100" data-name="number"></sample-number-input>
-
+ -->
   <h2>Select</h2>
   <style>
     sample-select [data-handler="opener"] { cursor: pointer; width: 200px; border: 1px solid #ddd; padding: 4px; }
@@ -45,13 +45,45 @@
     .popup { width: 200px; border: 1px solid #ddd; border-top: 0; padding: 4px; }
     [data-handler="option"] { padding: 4px; cursor: pointer; }
     [data-handler="option"]:hover { background: #eee; }
+    .template { display: none; }
     sample-select-option { display: none; }
   </style>
+
   <sample-select data-name="select">
-    <sample-select-option data-value="1">Option #1</sample-select-option>
-    <sample-select-option data-value="2">Option #2</sample-select-option>
-    <sample-select-option data-value="3">Option #3</sample-select-option>
-    <sample-select-option data-value="4">Option #4</sample-select-option>
+    <sample-select-option data-value="1" data-thumbnail="./src/images/1.png">
+      <div>
+        <div style="align-items: center; display: flex; justify-content: space-between;">
+          <img width="24" height="24" src="${thumbnail}">
+          <i>#${value}</i>
+        </div>
+      </div>
+    </sample-select-option>
+    <sample-select-option data-value="2" data-thumbnail="./src/images/2.png">
+      <div>
+        <div style="align-items: center; display: flex; justify-content: space-between;">
+          <img width="24" height="24" src="${thumbnail}">
+          <u>Option</u>
+        </div>
+      </div>
+    </sample-select-option>
+    <sample-select-option data-value="3" data-thumbnail="./src/images/3.png">
+      <div>
+        <div style="align-items: center; display: flex; justify-content: space-between;">
+          <img width="24" height="24" src="${thumbnail}">
+          <u>Option</u>
+          <i>#${value}</i>
+        </div>
+      </div>
+    </sample-select-option>
+    <sample-select-option data-value="4" data-thumbnail="./src/images/4.png">
+      <div>
+        <div style="align-items: center; display: flex; justify-content: space-between;">
+          <img width="24" height="24" src="${thumbnail}">
+          <u>Option</u>
+          <i>#${value}</i>
+        </div>
+      </div>
+    </sample-select-option>
   </sample-select>
 
   <script src="https://polyfill.io/v3/polyfill.min.js?features=Symbol%2CArray.prototype.find"></script>

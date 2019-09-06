@@ -80,28 +80,15 @@
 
     <div class="s-docs__block">
       <div class="s-docs__left">
-        <p class="s-docs__text">Templating has never been easier than it is now with smart-component. Just define a <b>template</b> getter on the component, and pass a container to the component options to enable rendering.</p>
+        <p class="s-docs__text">Templating has never been easier than it is now with smart-component; just define a <b>template</b> getter on the component.</p>
       </div>
       <div class="s-docs__right">
         <pre><code class="language-javascript">
           get template() {
-            return component => html`
+            return html => html`
               The value is: &lt;b&gt;${component._state.get('value')}&lt;/b&gt;
             `;
           }
-        </code></pre>
-      </div>
-    </div>
-
-    <div class="s-docs__block">
-      <div class="s-docs__left">
-        <p class="s-docs__text">By default the container is appended to the component. It can be changed to <b>prepend</b> instead.</p>
-      </div>
-      <div class="s-docs__right">
-        <pre><code class="language-javascript">
-          super.init({
-            'render.prepend': true
-          });
         </code></pre>
       </div>
     </div>
@@ -186,13 +173,13 @@
               {
                 name: 'hello',
                 markup: html => html`&lt;div&gt;Hello&lt;/div&gt;`,
-                container: this.constructor._parseHTML('&lt;div class="hello-container">&lt;/div&gt;'),
+                container: this._templater.parseHTML('&lt;div class="hello-container"&gt;&lt;/div&gt;'),
                 autoAppendContainer: true
               },
               {
                 name: 'world',
                 markup: html => html`&lt;div&gt;World!&lt;/div&gt;`,
-                container: this.constructor._parseHTML('&lt;div class="world-container">&lt;/div&gt;'),
+                container: this._templater.parseHTML('&lt;div class="world-container"&gt;&lt;/div&gt;'),
                 autoAppendContainer: true
               }
             ];
@@ -218,6 +205,77 @@
               {
                 name: 'world',
                 markup: html => html`&lt;strong&gt;World&lt;/strong&gt;`
+              }
+            ];
+          }
+        </code></pre>
+      </div>
+    </div>
+
+    <div class="s-docs__block">
+      <div class="s-docs__left">
+        <p class="s-docs__text">By default, templates are append to the component. It can be changed to <b>prepend</b> instead.</p>
+      </div>
+      <div class="s-docs__right">
+        <pre><code class="language-javascript">
+          get template() {
+            return [
+              {
+                name: 'hello',
+                markup: html => html`&lt;div&gt;Hello&lt;/div&gt;`,
+                container: this._templater.parseHTML('&lt;div class="hello-container"&gt;&lt;/div&gt;'),
+                autoAppendContainer: true,
+                prepend: true
+              }
+            ];
+          }
+        </code></pre>
+      </div>
+    </div>
+
+    <div class="s-docs__block">
+      <div class="s-docs__left">
+        <p class="s-docs__text">Another interesting and useful part of the templating system is the ability to <b>define templates in the DOM</b>. State variables can be used as well. In this case, be sure to <b>define a container</b> too.</p>
+      </div>
+      <div class="s-docs__right">
+        <pre><code class="language-html">
+          &lt;my-component&gt;
+            &lt;template&gt;Hello ${value}!&lt;/template&gt;
+          &lt;/my-component&gt;
+        </code></pre>
+
+        <pre><code class="language-javascript">
+          get template() {
+            return [
+              {
+                name: 'hello',
+                markup: this.querySelector('template'),
+                container: this._templater.parseHTML('&lt;div&gt;&lt;/div&gt;'),
+                autoAppendContainer: true
+              }
+            ];
+          }
+        </code></pre>
+      </div>
+    </div>
+
+    <div class="s-docs__block">
+      <div class="s-docs__left">
+        <p class="s-docs__text">Markup option can be a <b>selector</b> too. This way your components can use the same template defined outside.</p>
+      </div>
+      <div class="s-docs__right">
+        <pre><code class="language-html">
+          &lt;template id="my-template"&gt;Hello ${value}!&lt;/template&gt;
+
+          &lt;my-component&gt;&lt;/my-component&gt;
+        </code></pre>
+
+        <pre><code class="language-javascript">
+          get template() {
+            return [
+              {
+                name: 'hello',
+                markup: '#my-template'
               }
             ];
           }
@@ -291,6 +349,7 @@
 
           <div>
             <my-example-2>
+              <template>Value of the child component is: <b>${childValue}</b></template>
               <my-example-2-child value="0"></my-example-2-child>
             </my-example-2>
           </div>
@@ -308,23 +367,20 @@
           // Parent definition
           class MyExample2 extends SmartComponent {
             init() {
-              this._container = this.constructor._parseHTML(`
-                &lt;div class="my-example-2-value"&gt;&lt;/div&gt;
-              `);
-
-              super.init({
-                listenChildren: true,
-                render: {
-                  container: this._container
-                }
-              });
+              super.init({ listenChildren: true });
             }
 
             get template() {
-              return html => html`
-                Value of the child component is:
-                &lt;b&gt;${this._state.get('childValue')}&lt;/b&gt;
-              `;
+              return [{
+                name: 'main',
+                markup: html => html`
+                  Value of the child component is:
+                  &lt;b&gt;${this._state.get('childValue')}&lt;/b&gt;
+                `,
+                container: this._templater.parseHTML(`
+                  &lt;div class="my-example-2-value"&gt;&lt;/div&gt;
+                `),
+                autoAppendContainer: true
             }
 
             childrenChangedCallback(collection) {
@@ -341,9 +397,7 @@
           // Child definition
           class MyExample2Child extends SmartComponent {
             init() {
-              super.init({
-                notifyParent: true
-              });
+              super.init({ notifyParent: true });
             }
 
             static get observedAttributes() {

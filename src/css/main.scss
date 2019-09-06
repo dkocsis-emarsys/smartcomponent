@@ -93,9 +93,30 @@ code {
 
 pre[class*=language-] {
   background: transparent;
+  border-radius: 0;
   font-size: 12px;
   margin: 0;
-  padding: 0;
+  padding: 64px;
+  position: relative;
+
+  &:before {
+    color: #6c6e5e;
+    left: 16px;
+    position: absolute;
+    top: 16px;
+  }
+
+  & + pre[class*=language-] {
+    border-top: 1px solid #272822;
+  }
+}
+
+pre[class*=language-html]:before {
+  content: 'HTML';
+}
+
+pre[class*=language-javascript]:before {
+  content: 'JavaScript';
 }
 
 .s-header {
@@ -150,6 +171,12 @@ pre[class*=language-] {
       .s-docs__right {
         background: #272822;
       }
+
+      pre[class*=language-] {
+        & + pre[class*=language-] {
+          border-top: 1px solid #36372f;
+        }
+      }
     }
   }
 
@@ -161,9 +188,11 @@ pre[class*=language-] {
   }
 
   &__right {
-    align-items: center;
+    justify-content: center;
     background: #36372f;
     display: flex;
+    flex-direction: column;
+    padding: 0;
   }
 
   &__text {
