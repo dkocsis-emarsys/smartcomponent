@@ -7,10 +7,6 @@ class Templater {
     this._mutationObserver = new MutationObserver(this._context.contentChangedCallback.bind(this));
   }
 
-  static _parseHTML(content) {
-    return new DOMParser().parseFromString(content, 'text/html').body.childNodes[0];
-  }
-
   init(templates) {
     if (typeof templates === 'object') {
       templates.forEach(template => this._templates.push(template));
@@ -22,6 +18,10 @@ class Templater {
         autoAppendContainer: true
       }];
     }
+  }
+
+  parseHTML(content) {
+    return new DOMParser().parseFromString(content, 'text/html').body.childNodes[0];
   }
 
   connect() {
@@ -53,15 +53,7 @@ class Templater {
   renderAll() {
     this._templates.forEach(template => {
       if (template.markup && template.container) {
-        render(template.container, () => {
-          if (typeof template.markup === 'function') {
-            return template.markup.call(this._context, html);
-          } else if (typeof template.markup === 'object') {
-            return this.buildFromTemplate(template.markup)();
-          }
-
-          return this.buildFromTemplate(document.querySelector(template.markup).content)();
-        });
+        render(template.container, this.render(template.name));
       }
     });
   }
@@ -70,7 +62,7 @@ class Templater {
     const markup = this._templates.find(template => template.name === templateName).markup;
 
     if (typeof markup === 'function') {
-      return markup.call(this._context, html);
+      return markup.bind(this._context, html);
     } else if (typeof markup === 'object') {
       const markupElement = markup.nodeName === 'TEMPLATE' ? markup.content : markup;
 
@@ -92,9 +84,8 @@ class Templater {
 
     return render => {
       const innerHTML = [].map.call(template.childNodes, x => x.outerHTML).join('');
-      const data = this._context._state.get() || {};
 
-      const variableRegexp = /(\$\{[\w]+\})/g
+      const variableRegexp = /(\$\{[\w\.]+\})/g
       const templateValues = innerHTML.split(variableRegexp).reduce((values, item) => {
         if ('$' === item[0] && '{' === item[1] && '}' === item.slice(-1)) {
           values.keys.push(item.slice(2, -1));
@@ -109,7 +100,7 @@ class Templater {
 
       const output = [
         templateValues.markup,
-        ...templateValues.keys.map(key => data[key])
+        ...templateValues.keys.map(key => this._context._state.get(key))
       ];
       output.raw = { value: templateValues.markup };
 
