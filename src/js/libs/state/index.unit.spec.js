@@ -488,6 +488,17 @@ describe('State', () => {
         expect(() => state.set('a', '{ b: "2" }')).to.not.throw();
       });
 
+      it('json camelcase keys', () => {
+        const subscribeSpy = sinon.spy();
+        const state = new State({});
+
+        state.setOptions('a', { type: 'json' });
+        state.set('a', '{ "php_like_name": 2 }');
+
+        expect(state.get('a.phpLikeName')).to.equal(2);
+        expect(state.get('a')).to.deep.equal({ phpLikeName: 2 });
+      });
+
       it('custom', () => {
         const subscribeSpy = sinon.spy();
         const state = new State({});
