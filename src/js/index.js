@@ -17,3 +17,5 @@ import SampleSelectOption from './components/sample-select-option';
 
 defineElement(SampleNumberInput);
 defineElement(SampleSelect, [SampleSelectOption]);
+
+import './libs/tests/index';
