@@ -1,4 +1,4 @@
-import camelcaseKeys from 'camelcase-keys';
+import camelcaseKeys from 'camelcase-keys-recursive';
 import deepMerge from './deep-merge';
 
 export default class State {

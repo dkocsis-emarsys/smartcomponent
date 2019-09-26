@@ -18,7 +18,7 @@ export default class SampleSelectOption extends SmartComponent {
   }
 
   get template() {
-    return [{ name: 'inside', markup: this.querySelector('div') }];
+    return [{ name: 'inside', markup: '#select-option' }];
   }
 
   connectedCallback() {

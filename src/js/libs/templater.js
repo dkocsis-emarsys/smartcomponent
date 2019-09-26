@@ -10,7 +10,7 @@ class Templater {
   init(templates) {
     if (typeof templates === 'object') {
       templates.forEach(template => this._templates.push(template));
-    } else {
+    } else if (templates) {
       this._templates = [{
         name: '_default',
         markup: templates,
@@ -63,16 +63,18 @@ class Templater {
 
     if (typeof markup === 'function') {
       return markup.bind(this._context, html);
-    } else if (typeof markup === 'object') {
+    } else if (typeof markup === 'object' && markup) {
       const markupElement = markup.nodeName === 'TEMPLATE' ? markup.content : markup;
+
+      return this.buildFromTemplate(markupElement);
+    } else if (typeof markup === 'string') {
+      const markupSelector = document.querySelector(markup);
+      const markupElement = markupSelector.nodeName === 'TEMPLATE' ? markupSelector.content : markupSelector;
 
       return this.buildFromTemplate(markupElement);
     }
 
-    const markupSelector = document.querySelector(markup);
-    const markupElement = markupSelector.nodeName === 'TEMPLATE' ? markupSelector.content : markupSelector;
-
-    return this.buildFromTemplate(markupElement);
+    return () => null;
   }
 
   getContainer(templateName = '_default') {

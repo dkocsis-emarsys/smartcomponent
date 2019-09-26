@@ -1,3 +1,5 @@
+import EventTarget from '@ungap/event-target'
+
 const isObject = item => {
   return (item && typeof item === 'object' && !Array.isArray(item) && item !== null && !(item instanceof EventTarget));
 }
