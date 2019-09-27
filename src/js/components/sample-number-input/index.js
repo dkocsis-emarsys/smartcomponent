@@ -34,7 +34,7 @@ export default class SampleNumberInput extends SmartComponent {
 
   static get eventHandlers() {
     return {
-      'input:input': '_onInputInput',
+      'input:input': '_onInput',
       'decrease:click': '_onDecreaseClick',
       'increase:click': '_onIncreaseClick'
     };
@@ -49,7 +49,7 @@ export default class SampleNumberInput extends SmartComponent {
     `;
   }
 
-  _onInputInput(event) {
+  _onInput(event) {
     this._state.set('value', event.target.value);
     event.target.value = this._state.get('value');
   }
